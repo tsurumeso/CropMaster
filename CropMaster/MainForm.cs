@@ -14,9 +14,9 @@ namespace CropMaster
 {
     public partial class MainForm : Form
     {
-        const string versionString = "1.0.0";
-        string[] availableFormats = new string[] { ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tiff", ".tif" };
-        const int alpha = 128;
+        const string mVersionString = "1.0.0";
+        string[] mAvailableFormats = new string[] { ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tiff", ".tif" };
+        const int mAlpha = 128;
 
         float mScale;
         int mPadX, mPadY;
@@ -219,32 +219,31 @@ namespace CropMaster
 
         private void UpdateRectangles(int[] highlightIndices = null)
         {
-            if (ReloadPictureBox())
+            if (!ReloadPictureBox())
+                return;
+
+            if (mBaseImages[mCurrentImageIndex].Rectangles.Count() != 0 && EnabledDrawRect.Checked)
             {
-                // 保存された領域を描画
-                if (mBaseImages[mCurrentImageIndex].Rectangles.Count() != 0 && EnabledDrawRect.Checked)
+                using (SolidBrush alphaBrush = new SolidBrush(Color.FromArgb(mAlpha, mColor)))
+                using (SolidBrush reverseBrush = new SolidBrush(Color.FromArgb(mAlpha, mReverseColor)))
+                using (Pen reversePen = new Pen(mReverseColor))
                 {
-                    using (SolidBrush alphaBrush = new SolidBrush(Color.FromArgb(alpha, mColor)))
-                    using (SolidBrush reverseBrush = new SolidBrush(Color.FromArgb(alpha, mReverseColor)))
-                    using (Pen reversePen = new Pen(mReverseColor))
+                    reversePen.DashStyle = DashStyle.Dash;
+                    for (int i = 0; i < mBaseImages[mCurrentImageIndex].Rectangles.Count; i++)
                     {
-                        reversePen.DashStyle = DashStyle.Dash;
-                        for (int i = 0; i < mBaseImages[mCurrentImageIndex].Rectangles.Count; i++)
+                        var rect = mBaseImages[mCurrentImageIndex].Rectangles[i];
+                        if (highlightIndices != null && highlightIndices.Contains(i))
                         {
-                            var rect = mBaseImages[mCurrentImageIndex].Rectangles[i];
-                            if (highlightIndices != null && highlightIndices.Contains(i))
-                            {
-                                var frameRect = new Rectangle(rect.X - 1, rect.Y - 1, rect.Width + 1, rect.Height + 1);
-                                mDrawer.DrawRectangle(reversePen, frameRect);
-                                mDrawer.FillRectangle(reverseBrush, rect);
-                            }
-                            else
-                                mDrawer.FillRectangle(alphaBrush, rect);
+                            var frameRect = new Rectangle(rect.X - 1, rect.Y - 1, rect.Width + 1, rect.Height + 1);
+                            mDrawer.DrawRectangle(reversePen, frameRect);
+                            mDrawer.FillRectangle(reverseBrush, rect);
                         }
+                        else
+                            mDrawer.FillRectangle(alphaBrush, rect);
                     }
                 }
-                pictureBox1.Refresh();
             }
+            pictureBox1.Refresh();
         }
 
         private void DrawDashStyleRectangle(Point mouseDown, Point mouseCurrent, Color color)
@@ -287,14 +286,9 @@ namespace CropMaster
                 else if (rect.Y + rect.Height > pictureBox1.Image.Size.Height)
                     rect.Y = pictureBox1.Image.Size.Height - rect.Height;
             }
-            if (FixedRectangle_ToolStripMenuItem.Checked)
-            {
-                rect.Width = mFixedWidth;
-                rect.Height = mFixedHeight;
-            }
         }
 
-        private void FillRectangle(Point mouseDown, Point mouseCurrent)
+        private void AddRectangle(Point mouseDown, Point mouseCurrent)
         {
             Rectangle rect = GetRectangle(mouseDown, mouseCurrent);
             Rectangle imageRect = ConvertBoxToImage(rect);
@@ -302,6 +296,11 @@ namespace CropMaster
             if (imageRect.Width > 10 && imageRect.Height > 10)
             {
                 AdjustRectangle(ref imageRect);
+                if (FixedRectangle_ToolStripMenuItem.Checked)
+                {
+                    imageRect.Width = mFixedWidth;
+                    imageRect.Height = mFixedHeight;
+                }
                 mBaseImages[mCurrentImageIndex].Rectangles.Add(imageRect);
             }
             UpdateRectListView();
@@ -450,7 +449,6 @@ namespace CropMaster
             {
                 using (Stream fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
                 {
-                    // MemoryStreamを生成しファイルの内容をコピー
                     MemoryStream ms = new MemoryStream();
                     ms.SetLength(fs.Length);
                     fs.Read(ms.GetBuffer(), 0, (int)fs.Length);
@@ -677,7 +675,7 @@ namespace CropMaster
             {
                 SetControlMode(false);
                 mWorkingDirectory = dir;
-                List<string> files = await Task.Run(() => GetFilesRecursive(mWorkingDirectory, availableFormats));
+                List<string> files = await Task.Run(() => GetFilesRecursive(mWorkingDirectory, mAvailableFormats));
 
                 if (files.Count <= 0)
                     return false;
@@ -728,7 +726,7 @@ namespace CropMaster
 
         private void UpdateImageContainers(string currentFilePath, Dictionary<string, ImageContainer> xmlImages)
         {
-            List<string> files = GetFilesRecursive(mWorkingDirectory, availableFormats);
+            List<string> files = GetFilesRecursive(mWorkingDirectory, mAvailableFormats);
 
             if (files.Count > 0)
             {
@@ -958,7 +956,6 @@ namespace CropMaster
         {
             if (mBaseImages[imageIndex].Rectangles.Count > 0)
             {
-                // 画像を読み込む
                 Bitmap baseImage = new Bitmap(mBaseImages[imageIndex].Path);
                 Graphics g = Graphics.FromImage(baseImage);
                 SolidBrush colorBrush = new SolidBrush(mColor);
@@ -978,13 +975,11 @@ namespace CropMaster
         {
             if (mBaseImages[imageIndex].Rectangles.Count > 0)
             {
-                // 画像を読み込む
                 Bitmap baseImage = new Bitmap(mBaseImages[imageIndex].Path);
 
                 int count = 0;
                 for (int j = 0; j < mBaseImages[imageIndex].Rectangles.Count; j++)
                 {
-                    // 画像を切り抜く
                     Rectangle rect = mBaseImages[imageIndex].Rectangles[j];
                     Bitmap rectImage = CropImage(baseImage, rect);
 
@@ -1040,35 +1035,29 @@ namespace CropMaster
 
         private void NextImage()
         {
-            if (mBaseImages.Count > 0)
+            if (mCurrentImageIndex < mBaseImages.Count - 1)
             {
-                if (mCurrentImageIndex < mBaseImages.Count - 1)
-                {
-                    mCurrentImageIndex++;
-                    trackBar1.Value++;
-                    toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[mCurrentImageIndex].Path);
-                    UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
-                    UpdateRectangles();
-                    UpdateRectListView();
-                    UpdateRectEditorForm(0);
-                }
+                mCurrentImageIndex++;
+                trackBar1.Value++;
+                toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[mCurrentImageIndex].Path);
+                UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
+                UpdateRectangles();
+                UpdateRectListView();
+                UpdateRectEditorForm(0);
             }
         }
 
         private void PrevImage()
         {
-            if (mBaseImages.Count > 0)
+            if (mCurrentImageIndex > 0)
             {
-                if (mCurrentImageIndex > 0)
-                {
-                    mCurrentImageIndex--;
-                    trackBar1.Value--;
-                    toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[mCurrentImageIndex].Path);
-                    UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
-                    UpdateRectangles();
-                    UpdateRectListView();
-                    UpdateRectEditorForm(0);
-                }
+                mCurrentImageIndex--;
+                trackBar1.Value--;
+                toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[mCurrentImageIndex].Path);
+                UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
+                UpdateRectangles();
+                UpdateRectListView();
+                UpdateRectEditorForm(0);
             }
         }
 
@@ -1084,6 +1073,7 @@ namespace CropMaster
                         mMovingRectIndex = SearchRectangle(mMouseDown);
                         if (mMovingRectIndex == -1)
                         {
+                            // カーソルをデフォルトからクロスに
                             this.pictureBox1.Cursor = Cursors.Cross;
                             mIsDrawing = true;
                         }
@@ -1103,8 +1093,9 @@ namespace CropMaster
                     case MouseButtons.Left:
                         if (mIsDrawing)
                         {
+                            // カーソルをクロスからデフォルトに
                             this.pictureBox1.Cursor = Cursors.Default;
-                            FillRectangle(mMouseDown, mouseCurrent);
+                            AddRectangle(mMouseDown, mouseCurrent);
 
                             if (EnabledSelectionMove.Checked)
                             {
@@ -1139,7 +1130,7 @@ namespace CropMaster
                 switch (e.Button)
                 {
                     case MouseButtons.Left:
-                        // 描画フラグcheck
+                        // 描画フラグチェック
                         if (mIsDrawing)
                             DrawDashStyleRectangle(mMouseDown, mouseCurrent, mColor);
                         else if (mMovingRectIndex != -1)
@@ -1201,12 +1192,12 @@ namespace CropMaster
 
         private void button4_Click(object sender, EventArgs e)
         {
-            NextImage();
+            if (mBaseImages.Count > 0) NextImage();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            PrevImage();
+            if (mBaseImages.Count > 0) PrevImage();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -1300,7 +1291,7 @@ namespace CropMaster
         {
             string str = String.Format(
                 "プログラム名: CropMaster {0}\n",
-                versionString);
+                mVersionString);
             MessageBox.Show(str, "CropMasterについて",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -1371,25 +1362,23 @@ namespace CropMaster
 
         private void ColorSelect_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //ColorDialogクラスのインスタンスを作成
             ColorDialog cd = new ColorDialog();
 
-            //はじめに選択されている色を設定
+            // はじめに選択されている色を設定
             //cd.Color = TextBox1.BackColor;
             cd.AllowFullOpen = true;
             cd.SolidColorOnly = false;
-            //[作成した色]に指定した色（RGB値）を表示する
+            // [作成した色]に指定した色（RGB値）を表示する
             cd.CustomColors = new int[] {
                 0x33, 0x66, 0x99, 0xCC, 0x3300, 0x3333,
                 0x3366, 0x3399, 0x33CC, 0x6600, 0x6633,
                 0x6666, 0x6699, 0x66CC, 0x9900, 0x9933};
 
-            //ダイアログを表示する
             if (cd.ShowDialog() == DialogResult.OK)
             {
-                //選択された色の取得
                 mColor = cd.Color;
-                UpdateRectangles();
+                if (mBaseImages.Count > 0)
+                    UpdateRectangles();
             }
         }
 
@@ -1419,7 +1408,8 @@ namespace CropMaster
         private void EnabledDrawRect_Click(object sender, EventArgs e)
         {
             EnabledDrawRect.Checked = !EnabledDrawRect.Checked;
-            UpdateRectangles();
+            if (mBaseImages.Count > 0)
+                UpdateRectangles();
         }
 
         private void AnyAspects_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1443,7 +1433,6 @@ namespace CropMaster
 
         private void FixedRectangle_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //Form2クラスのインスタンスを作成する
             SizeEditorForm f = new SizeEditorForm();
             f.ShowDialog(this);
             f.Dispose();
@@ -1469,17 +1458,16 @@ namespace CropMaster
 
         private void ImportXml_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //OpenFileDialogクラスのインスタンスを作成
             OpenFileDialog ofd = new OpenFileDialog();
 
             ofd.FileName = "output.xml";
             ofd.Filter = "XMLファイル(*.xml)|*.xml";
             ofd.Title = "開くファイルを選択してください";
-            //ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
+            // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
             ofd.RestoreDirectory = true;
-            //存在しないファイルの名前が指定されたとき警告を表示する
+            // 存在しないファイルの名前が指定されたとき警告を表示する
             ofd.CheckFileExists = true;
-            //存在しないパスが指定されたとき警告を表示する
+            // 存在しないパスが指定されたとき警告を表示する
             ofd.CheckPathExists = true;
 
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -1505,12 +1493,12 @@ namespace CropMaster
 
                 await Task.Run(() => ExportFillImage(mCurrentImageIndex, exportDirectory, sng));
 
-                MessageBox.Show("上書き画像の出力が完了しました", "通知",
+                MessageBox.Show("選択領域の塗りつぶしが完了しました", "通知",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch
             {
-                MessageBox.Show("上書き画像の出力に失敗しました", "エラー",
+                MessageBox.Show("選択領域の塗りつぶしに失敗しました", "エラー",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -1550,12 +1538,12 @@ namespace CropMaster
                         }
                     });
                 }
-                MessageBox.Show("上書き画像の出力が完了しました", "通知",
+                MessageBox.Show("選択領域の塗りつぶしが完了しました", "通知",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (OperationCanceledException)
             {
-                MessageBox.Show("上書き画像の出力はキャンセルされました", "通知",
+                MessageBox.Show("選択領域の塗りつぶしはキャンセルされました", "通知",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             finally
@@ -1581,12 +1569,12 @@ namespace CropMaster
 
                 await Task.Run(() =>　ExportCropImage(mCurrentImageIndex, exportDirectory, sng));
 
-                MessageBox.Show("矩形画像の出力が完了しました", "通知",
+                MessageBox.Show("選択領域の切り出しが完了しました", "通知",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch
             {
-                MessageBox.Show("矩形画像の画像の出力に失敗しました", "エラー",
+                MessageBox.Show("選択領域の切り出しに失敗しました", "エラー",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -1666,12 +1654,12 @@ namespace CropMaster
                         }
                     });
                 }
-                MessageBox.Show("矩形画像の出力が完了しました", "通知",
+                MessageBox.Show("選択領域の切り出しが完了しました", "通知",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (OperationCanceledException)
             {
-                MessageBox.Show("矩形画像の出力はキャンセルされました", "通知",
+                MessageBox.Show("選択領域の切り出しはキャンセルされました", "通知",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             finally
@@ -1682,17 +1670,16 @@ namespace CropMaster
 
         private void ExportXml_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //SaveFileDialogクラスのインスタンスを作成
             SaveFileDialog sfd = new SaveFileDialog();
 
             sfd.FileName = "output.xml";
             sfd.Filter = "XMLファイル(*.xml)|*.xml";
             sfd.Title = "保存先のファイルを選択してください";
-            //ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
+            // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
             sfd.RestoreDirectory = true;
-            //既に存在するファイル名を指定したとき警告する
+            // 既に存在するファイル名を指定したとき警告する
             sfd.OverwritePrompt = true;
-            //存在しないパスが指定されたとき警告を表示する
+            // 存在しないパスが指定されたとき警告を表示する
             sfd.CheckPathExists = true;
 
             if (sfd.ShowDialog() == DialogResult.OK)
@@ -1703,17 +1690,16 @@ namespace CropMaster
 
         private void ExportImglab_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //SaveFileDialogクラスのインスタンスを作成
             SaveFileDialog sfd = new SaveFileDialog();
 
             sfd.FileName = "output.xml";
             sfd.Filter = "XMLファイル(*.xml)|*.xml";
             sfd.Title = "保存先のファイルを選択してください";
-            //ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
+            // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
             sfd.RestoreDirectory = true;
-            //既に存在するファイル名を指定したとき警告する
+            // 既に存在するファイル名を指定したとき警告する
             sfd.OverwritePrompt = true;
-            //存在しないパスが指定されたとき警告を表示する
+            // 存在しないパスが指定されたとき警告を表示する
             sfd.CheckPathExists = true;
 
             if (sfd.ShowDialog() == DialogResult.OK)

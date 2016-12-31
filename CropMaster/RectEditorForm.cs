@@ -105,8 +105,6 @@ namespace CropMaster
             {
                 Graphics g = e.Graphics;
                 Pen p = new Pen(Color.FromArgb(128, Color.Black), 1.0f);
-                //p.DashStyle = DashStyle.DashDot;
-                //p.DashPattern = new float[] { 2.0f, 2.0f, 6.0f, 2.0f };
                 g.DrawLine(p, pictureBox1.Size.Width / 2, 0, pictureBox1.Size.Width / 2, pictureBox1.Size.Height);
                 g.DrawLine(p, 0, pictureBox1.Size.Height / 2, pictureBox1.Size.Width, pictureBox1.Size.Height / 2);
             }
@@ -114,17 +112,16 @@ namespace CropMaster
 
         private void Output_ToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            //SaveFileDialogクラスのインスタンスを作成
             SaveFileDialog sfd = new SaveFileDialog();
 
             sfd.FileName = "newfile.png";
             sfd.Filter = "PNGファイル(*.png)|*.png";
             sfd.Title = "保存先のファイルを選択してください";
-            //ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
+            // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
             sfd.RestoreDirectory = true;
-            //既に存在するファイル名を指定したとき警告する
+            // 既に存在するファイル名を指定したとき警告する
             sfd.OverwritePrompt = true;
-            //存在しないパスが指定されたとき警告を表示する
+            // 存在しないパスが指定されたとき警告を表示する
             sfd.CheckPathExists = true;
 
             if (sfd.ShowDialog() == DialogResult.OK)
