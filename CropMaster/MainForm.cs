@@ -669,16 +669,17 @@ namespace CropMaster
             return files;
         }
 
-        private async Task<bool> InitializeImageContainers(string dir)
+        private async void InitializeImageContainers(string dir)
         { 
             try
             {
                 SetControlMode(false);
                 mWorkingDirectory = dir;
+                string tmpdir = mWorkingDirectory.TrimEnd('\\') + "\\";
                 List<string> files = await Task.Run(() => GetFilesRecursive(mWorkingDirectory, mAvailableFormats));
 
                 if (files.Count <= 0)
-                    return false;
+                    return;
 
                 if (mBaseImages != null)
                     mBaseImages.Clear();
@@ -690,8 +691,7 @@ namespace CropMaster
                     {
                         foreach (string file in files)
                         {
-                            string tmp = mWorkingDirectory.TrimEnd('\\') + "\\";
-                            int idx = file.IndexOf(tmp) + tmp.Length;
+                            int idx = file.IndexOf(tmpdir) + tmpdir.Length;
                             ImageContainer baseImage = new ImageContainer();
                             baseImage.Path = file;
                             baseImage.FileName = file.Remove(0, idx);
@@ -705,7 +705,13 @@ namespace CropMaster
                         }
                     });
                 }
-                return true;
+                mCurrentImageIndex = 0;
+                trackBar1.Maximum = mBaseImages.Count;
+                trackBar1.Value = 1;
+                toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[mCurrentImageIndex].Path);
+                UpdatePictureBox(mBaseImages[0].Path);
+                UpdateRectListView(false);
+                UpdateRectEditorForm();
             }
             catch (OperationCanceledException)
             {
@@ -721,11 +727,11 @@ namespace CropMaster
             {
                 SetControlMode(true);
             }
-            return false;
         }
 
         private void UpdateImageContainers(string currentFilePath, Dictionary<string, ImageContainer> xmlImages)
         {
+            string tmpdir = mWorkingDirectory.TrimEnd('\\') + "\\";
             List<string> files = GetFilesRecursive(mWorkingDirectory, mAvailableFormats);
 
             if (files.Count > 0)
@@ -736,16 +742,19 @@ namespace CropMaster
                 for (int i = 0; i < files.Count; i++)
                 {
                     var baseImage = new ImageContainer();
-                    if (!xmlImages.TryGetValue(files[i], out baseImage))
+                    if (!xmlImages.ContainsKey(files[i]))
                     {
-                        string tmp = mWorkingDirectory.TrimEnd('\\') + "\\";
-                        int idx = files[i].IndexOf(tmp) + tmp.Length;
+                        int idx = files[i].IndexOf(tmpdir) + tmpdir.Length;
                         baseImage.Path = files[i];
                         baseImage.FileName = files[i].Remove(0, idx);
                         baseImage.Rectangles = new List<Rectangle>();
                     }
+                    else
+                        baseImage = xmlImages[files[i]];
+
                     if (baseImage.Path == currentFilePath)
                         mCurrentImageIndex = i;
+
                     mBaseImages.Add(baseImage);
                 }
             }
@@ -1254,22 +1263,12 @@ namespace CropMaster
             pictureBox1.Focus();
         }
 
-        private async void Open_ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Open_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult dr = folderBrowserDialog1.ShowDialog();
             if (dr == System.Windows.Forms.DialogResult.OK)
             {
-                await InitializeImageContainers(folderBrowserDialog1.SelectedPath);
-                if (mBaseImages.Count > 0)
-                {
-                    mCurrentImageIndex = 0;
-                    trackBar1.Maximum = mBaseImages.Count;
-                    trackBar1.Value = 1;
-                    toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[mCurrentImageIndex].Path);
-                    UpdatePictureBox(mBaseImages[0].Path);
-                    UpdateRectListView(false);
-                    UpdateRectEditorForm();
-                }
+                InitializeImageContainers(folderBrowserDialog1.SelectedPath);
             }
         }
 
@@ -1666,6 +1665,24 @@ namespace CropMaster
             {
                 SetControlMode(true);
             }
+        }
+
+        private void MainForm_DragEnter(object sender, DragEventArgs e)
+        {
+            // コントロール内にドラッグされたとき実行される
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Copy;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void MainForm_DragDrop(object sender, DragEventArgs e)
+        {
+            string path = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
+            if (File.Exists(path))
+                Deserialize(path);
+            else if (Directory.Exists(path))
+                InitializeImageContainers(path);
         }
 
         private void ExportXml_ToolStripMenuItem_Click(object sender, EventArgs e)

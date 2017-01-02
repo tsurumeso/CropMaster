@@ -202,14 +202,14 @@
             // ExportFillOne_ToolStripMenuItem1
             // 
             this.ExportFillOne_ToolStripMenuItem1.Name = "ExportFillOne_ToolStripMenuItem1";
-            this.ExportFillOne_ToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.ExportFillOne_ToolStripMenuItem1.Size = new System.Drawing.Size(145, 22);
             this.ExportFillOne_ToolStripMenuItem1.Text = "現在の画像...";
             this.ExportFillOne_ToolStripMenuItem1.Click += new System.EventHandler(this.ExportFillOne_ToolStripMenuItem1_Click);
             // 
             // ExportFillAll_ToolStripMenuItem1
             // 
             this.ExportFillAll_ToolStripMenuItem1.Name = "ExportFillAll_ToolStripMenuItem1";
-            this.ExportFillAll_ToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.ExportFillAll_ToolStripMenuItem1.Size = new System.Drawing.Size(145, 22);
             this.ExportFillAll_ToolStripMenuItem1.Text = "すべての画像...";
             this.ExportFillAll_ToolStripMenuItem1.Click += new System.EventHandler(this.ExportFillAll_ToolStripMenuItem1_Click);
             // 
@@ -650,6 +650,7 @@
             // 
             // MainForm
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(879, 570);
@@ -663,6 +664,8 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MainForm";
             this.Text = "CropMaster";
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
