@@ -207,13 +207,12 @@ namespace CropMaster
 
         private bool ReloadPictureBox()
         {
-            if (mDrawer != null && mBackgroundImage != null)
-            {
-                pictureBox1.Image = new Bitmap(mBackgroundImage);
-                mDrawer = Graphics.FromImage(pictureBox1.Image);
-                mDrawer.DrawImage(mBackgroundImage, 0, 0, mBackgroundImage.Width, mBackgroundImage.Height);
-                return true;
-            }
+            if (mDrawer == null || mBackgroundImage == null)
+                return false;
+
+            pictureBox1.Image = new Bitmap(mBackgroundImage);
+            mDrawer = Graphics.FromImage(pictureBox1.Image);
+            mDrawer.DrawImage(mBackgroundImage, 0, 0, mBackgroundImage.Width, mBackgroundImage.Height);
             return true;
         }
 
