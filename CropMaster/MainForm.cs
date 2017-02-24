@@ -490,6 +490,9 @@ namespace CropMaster
                     mBackgroundImage = new Bitmap(src);
 
                     SetScaleAndPad(pictureBox1.Image);
+                    toolStripStatusLabel1.Text = String.Format("{0}    ", Path.GetFileName(imagePath));
+                    toolStripStatusLabel2.Text = String.Format("{0}/{1}    ", mCurrentImageIndex + 1, mBaseImages.Count);
+                    toolStripStatusLabel3.Text = String.Format("{0} x {1}    ", src.Width, src.Height);
                     src.Dispose();
                 }
             }
@@ -515,13 +518,11 @@ namespace CropMaster
                     {
                         mCurrentImageIndex = i;
                         trackBar1.Value = i + 1;
-                        toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[i].Path);
                         break;
                     }
                 }
                 if (oldImageIndex != mCurrentImageIndex)
                 {
-                    toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[mCurrentImageIndex].Path);
                     UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
                     UpdateRectangles();
                     UpdateRectListView();
@@ -544,7 +545,6 @@ namespace CropMaster
                         break;
                     }
                 }
-                toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[mCurrentImageIndex].Path);
                 UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
                 UpdateRectangles();
                 UpdateRectListView();
@@ -707,7 +707,6 @@ namespace CropMaster
                 mCurrentImageIndex = 0;
                 trackBar1.Maximum = mBaseImages.Count;
                 trackBar1.Value = 1;
-                toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[mCurrentImageIndex].Path);
                 UpdatePictureBox(mBaseImages[0].Path);
                 UpdateRectListView(false);
                 UpdateRectEditorForm();
@@ -867,7 +866,6 @@ namespace CropMaster
                 }
                 trackBar1.Maximum = mBaseImages.Count;
                 trackBar1.Value = mCurrentImageIndex + 1;
-                toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[mCurrentImageIndex].Path);
                 UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
                 UpdateRectangles();
                 UpdateRectListView();
@@ -1047,7 +1045,6 @@ namespace CropMaster
             {
                 mCurrentImageIndex++;
                 trackBar1.Value++;
-                toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[mCurrentImageIndex].Path);
                 UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
                 UpdateRectangles();
                 UpdateRectListView();
@@ -1061,7 +1058,6 @@ namespace CropMaster
             {
                 mCurrentImageIndex--;
                 trackBar1.Value--;
-                toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[mCurrentImageIndex].Path);
                 UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
                 UpdateRectangles();
                 UpdateRectListView();
@@ -1223,7 +1219,6 @@ namespace CropMaster
                             break;
                         }
                     }
-                    toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[mCurrentImageIndex].Path);
                     UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
                     UpdateRectangles();
                     UpdateRectListView();
@@ -1244,11 +1239,9 @@ namespace CropMaster
                         {
                             mCurrentImageIndex = i;
                             trackBar1.Value = i + 1;
-                            toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[i].Path);
                             break;
                         }
                     }
-                    toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[mCurrentImageIndex].Path);
                     UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
                     UpdateRectangles();
                     UpdateRectListView();
@@ -1277,7 +1270,6 @@ namespace CropMaster
             {
                 int idx = trackBar1.Value - 1;
                 mCurrentImageIndex = idx;
-                toolStripStatusLabel1.Text = Path.GetFileName(mBaseImages[mCurrentImageIndex].Path);
                 UpdatePictureBox(mBaseImages[idx].Path);
                 UpdateRectangles();
                 UpdateRectListView();
