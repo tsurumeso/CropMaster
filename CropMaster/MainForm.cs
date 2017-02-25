@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -49,6 +50,9 @@ namespace CropMaster
 
         delegate void UpdateScaleAndPadDelegate(string path);
         delegate void AdjustRectangleToImageDelegate(ref Rectangle rect);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool LockWindowUpdate(IntPtr hWnd);
 
         public MainForm()
         {
@@ -493,6 +497,7 @@ namespace CropMaster
                     toolStripStatusLabel1.Text = String.Format("{0}    ", Path.GetFileName(imagePath));
                     toolStripStatusLabel2.Text = String.Format("{0}/{1}    ", mCurrentImageIndex + 1, mBaseImages.Count);
                     toolStripStatusLabel3.Text = String.Format("{0} x {1}    ", src.Width, src.Height);
+                    toolStripStatusLabel4.Text = String.Format("{0}    ", src.PixelFormat.ToString().Replace("Format", ""));
                     src.Dispose();
                 }
             }
@@ -1674,6 +1679,16 @@ namespace CropMaster
                 Deserialize(path);
             else if (Directory.Exists(path))
                 InitializeImageContainers(path);
+        }
+
+        private void panel1_Scroll(object sender, ScrollEventArgs e)
+        {
+            LockWindowUpdate(IntPtr.Zero);
+            panel1.Update();
+            if (e.Type == ScrollEventType.ThumbPosition)
+                LockWindowUpdate(IntPtr.Zero);
+            else
+                LockWindowUpdate(this.Handle);
         }
 
         private void ExportXml_ToolStripMenuItem_Click(object sender, EventArgs e)
