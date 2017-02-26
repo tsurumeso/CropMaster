@@ -19,22 +19,19 @@ namespace CropMaster
             int max = 0;
             if (radioButton1.Checked)
             {
-                min = (int)numericUpDown1.Value;
+                min = (int)numericUpDownEx2.Value;
                 max = min;
             }
             else
             {
-                min = (int)numericUpDown2.Value;
-                max = (int)numericUpDown3.Value;
+                min = (int)numericUpDownEx3.Value;
+                max = (int)numericUpDownEx4.Value;
             }
+
             if (isOne)
-            {
-                ((MainForm)this.Owner).RandomCropOne((int)numericUpDown4.Value, min, max);
-            }
+                ((MainForm)this.Owner).RandomCropOne((int)numericUpDownEx1.Value, min, max);
             else
-            {
-                ((MainForm)this.Owner).RandomCropAll((int)numericUpDown4.Value, min, max);
-            }
+                ((MainForm)this.Owner).RandomCropAll((int)numericUpDownEx1.Value, min, max);
             this.Close();
         }
 

@@ -39,7 +39,7 @@
             this.label1.Location = new System.Drawing.Point(12, 45);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(26, 15);
-            this.label1.TabIndex = 2;
+            this.label1.TabIndex = 1;
             this.label1.Text = "0 %";
             // 
             // progressBar1
@@ -47,14 +47,14 @@
             this.progressBar1.Location = new System.Drawing.Point(12, 12);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(307, 23);
-            this.progressBar1.TabIndex = 3;
+            this.progressBar1.TabIndex = 0;
             // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(244, 41);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 4;
+            this.button1.TabIndex = 2;
             this.button1.Text = "キャンセル";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -72,7 +72,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "ProgressForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "ProgressForm";
+            this.Text = "進捗";
             this.ResumeLayout(false);
             this.PerformLayout();
 

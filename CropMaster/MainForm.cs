@@ -28,6 +28,7 @@ namespace CropMaster
         int mCurrentImageIndex = -1;
         int mCurrentRectIndex = -1;
         int mOldOnRectIndex = -1;
+        int mWHRateIndex = 0;
         int mFixedWidth = 256, mFixedHeight = 256;
 
         Graphics mDrawer;
@@ -59,6 +60,10 @@ namespace CropMaster
             InitializeComponent();
             InitializeControlMode(false);
             ShowRectEditorForm();
+
+            toolStripComboBox1.SelectedIndex = 0;
+            mFixedWidth = (int)toolStripNumericUpDown1.Value;
+            mFixedHeight = (int)toolStripNumericUpDown2.Value;
         }
 
         private Point GetStartPoint(Point p1, Point p2)
@@ -71,17 +76,17 @@ namespace CropMaster
 
         private Rectangle GetRectangle(Point mouseDown, Point mouseCurrent)
         {
-            if (SquareRectangle_ToolStripMenuItem.Checked)
+            if (mWHRateIndex == 0)
             {
                 return GetSquareRectangle(mouseDown, mouseCurrent);
             }
-            else if (AnyAspects_ToolStripMenuItem.Checked)
-            {
-                return GetAnyAspectsRectangle(mouseDown, mouseCurrent);
-            }
-            else if (FixedRectangle_ToolStripMenuItem.Checked)
+            else if (mWHRateIndex == 1)
             {
                 return GetFixedRectangle(mouseCurrent);
+            }
+            else if (mWHRateIndex == 2)
+            {
+                return GetAnyAspectsRectangle(mouseDown, mouseCurrent);
             }
             return new Rectangle(0, 0, 0, 0);
         }
@@ -299,7 +304,7 @@ namespace CropMaster
             if (imageRect.Width > 10 && imageRect.Height > 10)
             {
                 AdjustRectangle(ref imageRect);
-                if (FixedRectangle_ToolStripMenuItem.Checked)
+                if (mWHRateIndex == 1)
                 {
                     imageRect.Width = mFixedWidth;
                     imageRect.Height = mFixedHeight;
@@ -1022,8 +1027,6 @@ namespace CropMaster
             ImportXml_ToolStripMenuItem.Enabled = flag;
             RandomCrop_ToolStripMenuItem.Enabled = flag;
             RandomCropAll_ToolStripMenuItem.Enabled = flag;
-            Delete_ToolStripMenuItem.Enabled = flag;
-            DeleteAll_ToolStripMenuItem1.Enabled = flag;
         }
 
         private void InitializeControlMode(bool flag)
@@ -1034,8 +1037,6 @@ namespace CropMaster
             ExportXml_ToolStripMenuItem.Enabled = flag;
             RandomCrop_ToolStripMenuItem.Enabled = flag;
             RandomCropAll_ToolStripMenuItem.Enabled = flag;
-            Delete_ToolStripMenuItem.Enabled = flag;
-            DeleteAll_ToolStripMenuItem1.Enabled = flag;
         }
 
         public void SetFixedRectangleSize(int width, int height)
@@ -1291,29 +1292,6 @@ namespace CropMaster
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void DeleteOne_ToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            if (mBaseImages[mCurrentImageIndex].Rectangles != null)
-            {
-                mBaseImages[mCurrentImageIndex].Rectangles.Clear();
-            }
-            UpdateRectangles();
-            UpdateRectListView(false);
-        }
-
-        private void DeleteAll_ToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            foreach (ImageContainer baseImage in mBaseImages)
-            {
-                if (baseImage.Rectangles != null)
-                {
-                    baseImage.Rectangles.Clear();
-                }
-            }
-            UpdateRectangles();
-            UpdateRectListView(false);
-        }
-
         private void RandomCropThis_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RandomCropForm f = new RandomCropForm(true);
@@ -1407,33 +1385,9 @@ namespace CropMaster
                 UpdateRectangles();
         }
 
-        private void AnyAspects_ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SquareRectangle_ToolStripMenuItem.Checked = false;
-            AnyAspects_ToolStripMenuItem.Checked = true;
-            FixedRectangle_ToolStripMenuItem.Checked = false;
-        }
-
-        private void SquareRectangle_ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SquareRectangle_ToolStripMenuItem.Checked = true;
-            AnyAspects_ToolStripMenuItem.Checked = false;
-            FixedRectangle_ToolStripMenuItem.Checked = false;
-        }
-
         private void EnabledSelectionMove_Click(object sender, EventArgs e)
         {
             EnabledSelectionMove.Checked = !EnabledSelectionMove.Checked;
-        }
-
-        private void FixedRectangle_ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SizeEditorForm f = new SizeEditorForm();
-            f.ShowDialog(this);
-            f.Dispose();
-            SquareRectangle_ToolStripMenuItem.Checked = false;
-            AnyAspects_ToolStripMenuItem.Checked = false;
-            FixedRectangle_ToolStripMenuItem.Checked = true;
         }
 
         private void MappingRectangle_Click(object sender, EventArgs e)
@@ -1578,10 +1532,11 @@ namespace CropMaster
             }
         }
 
-        private void EnabledScaling_ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void UpdateFillBoxState(bool enabled)
         {
-            EnabledScaling_ToolStripMenuItem.Checked = !EnabledScaling_ToolStripMenuItem.Checked;
-            if (EnabledScaling_ToolStripMenuItem.Checked)
+            toolStripButton2.Checked = enabled;
+            EnabledFillBox_ToolStripMenuItem.Checked = enabled;
+            if (enabled)
             {
                 pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
                 pictureBox1.Dock = DockStyle.Fill;
@@ -1592,6 +1547,17 @@ namespace CropMaster
                 pictureBox1.Dock = DockStyle.None;
             }
             pictureBox1.Refresh();
+        }
+
+        private void UpdateCheckerBoardState(bool enabled)
+        {
+            toolStripButton3.Checked = enabled;
+            EnabledCheckerBoard_ToolStripMenuItem.Checked = enabled;
+            if (enabled)
+                panel1.BackgroundImage = Properties.Resources.CheckerBoard;
+            else
+                panel1.BackgroundImage = null;
+            panel1.Refresh();
         }
 
         private void Remove_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1606,16 +1572,6 @@ namespace CropMaster
                 UpdateRectEditorForm();
                 UpdateRectangles();
             }
-        }
-
-        private void EnabledCheckerBoard_ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            EnabledCheckerBoard_ToolStripMenuItem.Checked = !EnabledCheckerBoard_ToolStripMenuItem.Checked;
-            if (EnabledCheckerBoard_ToolStripMenuItem.Checked)
-                panel1.BackgroundImage = CropMaster.Properties.Resources.CheckerBoard;
-            else
-                panel1.BackgroundImage = null;
-            panel1.Refresh();
         }
 
         private async void ExportCropAll_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1689,6 +1645,126 @@ namespace CropMaster
                 LockWindowUpdate(IntPtr.Zero);
             else
                 LockWindowUpdate(this.Handle);
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+
+            ofd.FileName = "output.xml";
+            ofd.Filter = "XMLファイル(*.xml)|*.xml";
+            ofd.Title = "開くファイルを選択してください";
+            // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
+            ofd.RestoreDirectory = true;
+            // 存在しないファイルの名前が指定されたとき警告を表示する
+            ofd.CheckFileExists = true;
+            // 存在しないパスが指定されたとき警告を表示する
+            ofd.CheckPathExists = true;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                Deserialize(ofd.FileName);
+            }
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            UpdateFillBoxState(!toolStripButton2.Checked);
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            UpdateCheckerBoardState(!toolStripButton3.Checked);
+        }
+
+        private void EnabledFillBox_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UpdateFillBoxState(!EnabledFillBox_ToolStripMenuItem.Checked);
+        }
+
+        private void EnabledCheckerBoard_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UpdateCheckerBoardState(!EnabledCheckerBoard_ToolStripMenuItem.Checked);
+        }
+
+        private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            mWHRateIndex = toolStripComboBox1.SelectedIndex;
+            if (mWHRateIndex == 1)
+            {
+                toolStripLabel2.Available = true;
+                toolStripLabel3.Available = true;
+                toolStripNumericUpDown1.Available = true;
+                toolStripNumericUpDown2.Available = true;
+            }
+            else
+            {
+                toolStripLabel2.Available = false;
+                toolStripLabel3.Available = false;
+                toolStripNumericUpDown1.Available = false;
+                toolStripNumericUpDown2.Available = false;
+            }
+        }
+
+        private void toolStripNumericUpDown1_TextChanged(object sender, EventArgs e)
+        {
+            mFixedWidth = (int)toolStripNumericUpDown1.Value;
+        }
+
+        private void toolStripNumericUpDown2_TextChanged(object sender, EventArgs e)
+        {
+            mFixedHeight = (int)toolStripNumericUpDown2.Value;
+        }
+
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = folderBrowserDialog1.ShowDialog();
+            if (dr == System.Windows.Forms.DialogResult.OK)
+            {
+                InitializeImageContainers(folderBrowserDialog1.SelectedPath);
+            }
+        }
+
+        private void toolStripButton5_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+
+            sfd.FileName = "output.xml";
+            sfd.Filter = "XMLファイル(*.xml)|*.xml";
+            sfd.Title = "保存先のファイルを選択してください";
+            // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
+            sfd.RestoreDirectory = true;
+            // 既に存在するファイル名を指定したとき警告する
+            sfd.OverwritePrompt = true;
+            // 存在しないパスが指定されたとき警告を表示する
+            sfd.CheckPathExists = true;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                Serialize(sfd.FileName);
+            }
+        }
+
+        private void DeleteAll_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (ImageContainer baseImage in mBaseImages)
+            {
+                if (baseImage.Rectangles != null)
+                {
+                    baseImage.Rectangles.Clear();
+                }
+            }
+            UpdateRectangles();
+            UpdateRectListView(false);
+        }
+
+        private void SelectAll_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listView1.Focus();
+            listView1.BeginUpdate();
+            for (int i = 0; i < listView1.Items.Count; i++)
+                listView1.Items[i].Selected = true;
+            listView1.EndUpdate();
         }
 
         private void ExportXml_ToolStripMenuItem_Click(object sender, EventArgs e)

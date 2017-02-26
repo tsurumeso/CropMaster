@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
@@ -49,19 +50,14 @@
             this.ImportXml_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.Exit_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.編集EToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DeleteAll_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.表示VToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.EnabledDrawRect = new System.Windows.Forms.ToolStripMenuItem();
             this.EnabledRectEditorForm = new System.Windows.Forms.ToolStripMenuItem();
-            this.EnabledScaling_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.EnabledFillBox_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.EnabledCheckerBoard_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ツールTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.矩形縦横比ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.AnyAspects_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SquareRectangle_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.FixedRectangle_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.Delete_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DeleteOne_ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.DeleteAll_ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.RandomCrop_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RandomCropThis_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RandomCropAll_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -77,6 +73,7 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -84,6 +81,7 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.Remove_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SelectAll_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -93,7 +91,20 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripNumericUpDown1 = new CropMaster.ToolStripNumericUpDown();
+            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripNumericUpDown2 = new CropMaster.ToolStripNumericUpDown();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -104,15 +115,16 @@
             this.splitContainer2.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(482, 437);
+            this.button3.Location = new System.Drawing.Point(482, 412);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 4;
+            this.button3.TabIndex = 2;
             this.button3.Text = "<";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
@@ -120,11 +132,11 @@
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(563, 437);
+            this.button4.Location = new System.Drawing.Point(563, 412);
             this.button4.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 5;
+            this.button4.TabIndex = 3;
             this.button4.Text = ">";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
@@ -133,13 +145,14 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ファイルFToolStripMenuItem,
+            this.編集EToolStripMenuItem,
             this.表示VToolStripMenuItem,
             this.ツールTToolStripMenuItem,
             this.ヘルプHToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(879, 24);
-            this.menuStrip1.TabIndex = 9;
+            this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // ファイルFToolStripMenuItem
@@ -263,12 +276,27 @@
             this.Exit_ToolStripMenuItem.Text = "終了(&X)";
             this.Exit_ToolStripMenuItem.Click += new System.EventHandler(this.Exit_ToolStripMenuItem_Click);
             // 
+            // 編集EToolStripMenuItem
+            // 
+            this.編集EToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.DeleteAll_ToolStripMenuItem});
+            this.編集EToolStripMenuItem.Name = "編集EToolStripMenuItem";
+            this.編集EToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
+            this.編集EToolStripMenuItem.Text = "編集(&E)";
+            // 
+            // DeleteAll_ToolStripMenuItem
+            // 
+            this.DeleteAll_ToolStripMenuItem.Name = "DeleteAll_ToolStripMenuItem";
+            this.DeleteAll_ToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.DeleteAll_ToolStripMenuItem.Text = "すべての選択領域の削除(&D)";
+            this.DeleteAll_ToolStripMenuItem.Click += new System.EventHandler(this.DeleteAll_ToolStripMenuItem_Click);
+            // 
             // 表示VToolStripMenuItem
             // 
             this.表示VToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.EnabledDrawRect,
             this.EnabledRectEditorForm,
-            this.EnabledScaling_ToolStripMenuItem,
+            this.EnabledFillBox_ToolStripMenuItem,
             this.EnabledCheckerBoard_ToolStripMenuItem});
             this.表示VToolStripMenuItem.Name = "表示VToolStripMenuItem";
             this.表示VToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
@@ -292,12 +320,12 @@
             this.EnabledRectEditorForm.Text = "選択領域の編集";
             this.EnabledRectEditorForm.Click += new System.EventHandler(this.EnabledRectEditorForm_Click);
             // 
-            // EnabledScaling_ToolStripMenuItem
+            // EnabledFillBox_ToolStripMenuItem
             // 
-            this.EnabledScaling_ToolStripMenuItem.Name = "EnabledScaling_ToolStripMenuItem";
-            this.EnabledScaling_ToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
-            this.EnabledScaling_ToolStripMenuItem.Text = "画面に合わせる";
-            this.EnabledScaling_ToolStripMenuItem.Click += new System.EventHandler(this.EnabledScaling_ToolStripMenuItem_Click);
+            this.EnabledFillBox_ToolStripMenuItem.Name = "EnabledFillBox_ToolStripMenuItem";
+            this.EnabledFillBox_ToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.EnabledFillBox_ToolStripMenuItem.Text = "画面に合わせる";
+            this.EnabledFillBox_ToolStripMenuItem.Click += new System.EventHandler(this.EnabledFillBox_ToolStripMenuItem_Click);
             // 
             // EnabledCheckerBoard_ToolStripMenuItem
             // 
@@ -309,8 +337,6 @@
             // ツールTToolStripMenuItem
             // 
             this.ツールTToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.矩形縦横比ToolStripMenuItem,
-            this.Delete_ToolStripMenuItem,
             this.RandomCrop_ToolStripMenuItem,
             this.OutRectangle_ToolStripMenuItem,
             this.MappingRectangle,
@@ -319,62 +345,6 @@
             this.ツールTToolStripMenuItem.Name = "ツールTToolStripMenuItem";
             this.ツールTToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.ツールTToolStripMenuItem.Text = "ツール(&T)";
-            // 
-            // 矩形縦横比ToolStripMenuItem
-            // 
-            this.矩形縦横比ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.AnyAspects_ToolStripMenuItem,
-            this.SquareRectangle_ToolStripMenuItem,
-            this.FixedRectangle_ToolStripMenuItem});
-            this.矩形縦横比ToolStripMenuItem.Name = "矩形縦横比ToolStripMenuItem";
-            this.矩形縦横比ToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.矩形縦横比ToolStripMenuItem.Text = "矩形縦横比";
-            // 
-            // AnyAspects_ToolStripMenuItem
-            // 
-            this.AnyAspects_ToolStripMenuItem.Name = "AnyAspects_ToolStripMenuItem";
-            this.AnyAspects_ToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
-            this.AnyAspects_ToolStripMenuItem.Text = "指定しない";
-            this.AnyAspects_ToolStripMenuItem.Click += new System.EventHandler(this.AnyAspects_ToolStripMenuItem_Click);
-            // 
-            // SquareRectangle_ToolStripMenuItem
-            // 
-            this.SquareRectangle_ToolStripMenuItem.Checked = true;
-            this.SquareRectangle_ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.SquareRectangle_ToolStripMenuItem.Name = "SquareRectangle_ToolStripMenuItem";
-            this.SquareRectangle_ToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
-            this.SquareRectangle_ToolStripMenuItem.Text = "正方形 (1 : 1)";
-            this.SquareRectangle_ToolStripMenuItem.Click += new System.EventHandler(this.SquareRectangle_ToolStripMenuItem_Click);
-            // 
-            // FixedRectangle_ToolStripMenuItem
-            // 
-            this.FixedRectangle_ToolStripMenuItem.Name = "FixedRectangle_ToolStripMenuItem";
-            this.FixedRectangle_ToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
-            this.FixedRectangle_ToolStripMenuItem.Text = "固定サイズ";
-            this.FixedRectangle_ToolStripMenuItem.Click += new System.EventHandler(this.FixedRectangle_ToolStripMenuItem_Click);
-            // 
-            // Delete_ToolStripMenuItem
-            // 
-            this.Delete_ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.DeleteOne_ToolStripMenuItem1,
-            this.DeleteAll_ToolStripMenuItem1});
-            this.Delete_ToolStripMenuItem.Name = "Delete_ToolStripMenuItem";
-            this.Delete_ToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.Delete_ToolStripMenuItem.Text = "選択領域削除";
-            // 
-            // DeleteOne_ToolStripMenuItem1
-            // 
-            this.DeleteOne_ToolStripMenuItem1.Name = "DeleteOne_ToolStripMenuItem1";
-            this.DeleteOne_ToolStripMenuItem1.Size = new System.Drawing.Size(169, 22);
-            this.DeleteOne_ToolStripMenuItem1.Text = "現在の画像に適用";
-            this.DeleteOne_ToolStripMenuItem1.Click += new System.EventHandler(this.DeleteOne_ToolStripMenuItem1_Click);
-            // 
-            // DeleteAll_ToolStripMenuItem1
-            // 
-            this.DeleteAll_ToolStripMenuItem1.Name = "DeleteAll_ToolStripMenuItem1";
-            this.DeleteAll_ToolStripMenuItem1.Size = new System.Drawing.Size(169, 22);
-            this.DeleteAll_ToolStripMenuItem1.Text = "すべての画像に適用";
-            this.DeleteAll_ToolStripMenuItem1.Click += new System.EventHandler(this.DeleteAll_ToolStripMenuItem1_Click);
             // 
             // RandomCrop_ToolStripMenuItem
             // 
@@ -470,7 +440,7 @@
             this.statusStrip1.Location = new System.Drawing.Point(0, 546);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(879, 24);
-            this.statusStrip1.TabIndex = 11;
+            this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
@@ -497,6 +467,14 @@
             this.toolStripStatusLabel3.Text = "    ";
             this.toolStripStatusLabel3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // toolStripStatusLabel4
+            // 
+            this.toolStripStatusLabel4.Name = "toolStripStatusLabel4";
+            this.toolStripStatusLabel4.Size = new System.Drawing.Size(795, 19);
+            this.toolStripStatusLabel4.Spring = true;
+            this.toolStripStatusLabel4.Text = "    ";
+            this.toolStripStatusLabel4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // listView1
             // 
             this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -513,7 +491,7 @@
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.Margin = new System.Windows.Forms.Padding(0);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(213, 518);
+            this.listView1.Size = new System.Drawing.Size(213, 493);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -542,38 +520,46 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Remove_ToolStripMenuItem});
+            this.Remove_ToolStripMenuItem,
+            this.SelectAll_ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(99, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(143, 48);
             // 
             // Remove_ToolStripMenuItem
             // 
             this.Remove_ToolStripMenuItem.Name = "Remove_ToolStripMenuItem";
-            this.Remove_ToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
-            this.Remove_ToolStripMenuItem.Text = "削除";
+            this.Remove_ToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.Remove_ToolStripMenuItem.Text = "削除(&D)";
             this.Remove_ToolStripMenuItem.Click += new System.EventHandler(this.Remove_ToolStripMenuItem_Click);
+            // 
+            // SelectAll_ToolStripMenuItem
+            // 
+            this.SelectAll_ToolStripMenuItem.Name = "SelectAll_ToolStripMenuItem";
+            this.SelectAll_ToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.SelectAll_ToolStripMenuItem.Text = "すべて選択(&A)";
+            this.SelectAll_ToolStripMenuItem.Click += new System.EventHandler(this.SelectAll_ToolStripMenuItem_Click);
             // 
             // trackBar1
             // 
             this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBar1.LargeChange = 1;
-            this.trackBar1.Location = new System.Drawing.Point(3, 437);
+            this.trackBar1.Location = new System.Drawing.Point(3, 412);
             this.trackBar1.Maximum = 1;
             this.trackBar1.Minimum = 1;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(473, 45);
-            this.trackBar1.TabIndex = 12;
+            this.trackBar1.TabIndex = 1;
             this.trackBar1.Value = 1;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(563, 466);
+            this.button1.Location = new System.Drawing.Point(563, 441);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 14;
+            this.button1.TabIndex = 5;
             this.button1.Text = ">>";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -581,10 +567,10 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(482, 466);
+            this.button2.Location = new System.Drawing.Point(482, 441);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 13;
+            this.button2.TabIndex = 4;
             this.button2.Text = "<<";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -595,7 +581,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer2.Location = new System.Drawing.Point(12, 27);
+            this.splitContainer2.Location = new System.Drawing.Point(12, 52);
             this.splitContainer2.Name = "splitContainer2";
             // 
             // splitContainer2.Panel1
@@ -612,7 +598,7 @@
             this.splitContainer2.Panel2.Controls.Add(this.button3);
             this.splitContainer2.Panel2.Controls.Add(this.button2);
             this.splitContainer2.Panel2.Controls.Add(this.trackBar1);
-            this.splitContainer2.Size = new System.Drawing.Size(855, 518);
+            this.splitContainer2.Size = new System.Drawing.Size(855, 493);
             this.splitContainer2.SplitterDistance = 213;
             this.splitContainer2.TabIndex = 17;
             // 
@@ -628,8 +614,8 @@
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(638, 434);
-            this.panel1.TabIndex = 17;
+            this.panel1.Size = new System.Drawing.Size(638, 409);
+            this.panel1.TabIndex = 0;
             this.panel1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.panel1_Scroll);
             // 
             // pictureBox1
@@ -639,7 +625,7 @@
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(638, 434);
+            this.pictureBox1.Size = new System.Drawing.Size(637, 408);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -652,11 +638,11 @@
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Location = new System.Drawing.Point(563, 495);
+            this.button5.Location = new System.Drawing.Point(563, 470);
             this.button5.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 16;
+            this.button5.TabIndex = 7;
             this.button5.Text = ">>>";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
@@ -664,21 +650,183 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button6.Location = new System.Drawing.Point(482, 495);
+            this.button6.Location = new System.Drawing.Point(482, 470);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 15;
+            this.button6.TabIndex = 6;
             this.button6.Text = "<<<";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
-            // toolStripStatusLabel4
+            // toolStrip1
             // 
-            this.toolStripStatusLabel4.Name = "toolStripStatusLabel4";
-            this.toolStripStatusLabel4.Size = new System.Drawing.Size(764, 19);
-            this.toolStripStatusLabel4.Spring = true;
-            this.toolStripStatusLabel4.Text = "    ";
-            this.toolStripStatusLabel4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton4,
+            this.toolStripButton1,
+            this.toolStripButton5,
+            this.toolStripSeparator4,
+            this.toolStripButton2,
+            this.toolStripButton3,
+            this.toolStripSeparator5,
+            this.toolStripLabel1,
+            this.toolStripComboBox1,
+            this.toolStripLabel2,
+            this.toolStripNumericUpDown1,
+            this.toolStripLabel3,
+            this.toolStripNumericUpDown2});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(879, 25);
+            this.toolStrip1.TabIndex = 1;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripButton4
+            // 
+            this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton4.Image")));
+            this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton4.Name = "toolStripButton4";
+            this.toolStripButton4.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton4.Text = "フォルダを開く";
+            this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton4_Click);
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Text = "XML読み込み";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
+            // toolStripButton5
+            // 
+            this.toolStripButton5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton5.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton5.Image")));
+            this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton5.Name = "toolStripButton5";
+            this.toolStripButton5.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton5.Text = "XML書き出し";
+            this.toolStripButton5.Click += new System.EventHandler(this.toolStripButton5_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton2.Text = "画面に合わせる";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            // 
+            // toolStripButton3
+            // 
+            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton3.Image = global::CropMaster.Properties.Resources.CheckerBoard;
+            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton3.Name = "toolStripButton3";
+            this.toolStripButton3.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton3.Text = "チェッカーボード";
+            this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(52, 22);
+            this.toolStripLabel1.Text = "縦横比 : ";
+            // 
+            // toolStripComboBox1
+            // 
+            this.toolStripComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolStripComboBox1.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
+            this.toolStripComboBox1.Items.AddRange(new object[] {
+            "1 : 1",
+            "固定サイズ",
+            "指定しない"});
+            this.toolStripComboBox1.Name = "toolStripComboBox1";
+            this.toolStripComboBox1.Size = new System.Drawing.Size(80, 25);
+            this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox1_SelectedIndexChanged);
+            // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(48, 22);
+            this.toolStripLabel2.Text = "Width : ";
+            // 
+            // toolStripNumericUpDown1
+            // 
+            this.toolStripNumericUpDown1.AutoSize = false;
+            this.toolStripNumericUpDown1.DecimalPlaces = 0;
+            this.toolStripNumericUpDown1.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.toolStripNumericUpDown1.Maximum = new decimal(new int[] {
+            65536,
+            0,
+            0,
+            0});
+            this.toolStripNumericUpDown1.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.toolStripNumericUpDown1.Name = "toolStripNumericUpDown1";
+            this.toolStripNumericUpDown1.Size = new System.Drawing.Size(60, 21);
+            this.toolStripNumericUpDown1.Text = "256";
+            this.toolStripNumericUpDown1.Value = new decimal(new int[] {
+            256,
+            0,
+            0,
+            0});
+            this.toolStripNumericUpDown1.TextChanged += new System.EventHandler(this.toolStripNumericUpDown1_TextChanged);
+            // 
+            // toolStripLabel3
+            // 
+            this.toolStripLabel3.Name = "toolStripLabel3";
+            this.toolStripLabel3.Size = new System.Drawing.Size(52, 22);
+            this.toolStripLabel3.Text = "Height : ";
+            // 
+            // toolStripNumericUpDown2
+            // 
+            this.toolStripNumericUpDown2.AutoSize = false;
+            this.toolStripNumericUpDown2.DecimalPlaces = 0;
+            this.toolStripNumericUpDown2.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.toolStripNumericUpDown2.Maximum = new decimal(new int[] {
+            65536,
+            0,
+            0,
+            0});
+            this.toolStripNumericUpDown2.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.toolStripNumericUpDown2.Name = "toolStripNumericUpDown2";
+            this.toolStripNumericUpDown2.Size = new System.Drawing.Size(60, 21);
+            this.toolStripNumericUpDown2.Text = "256";
+            this.toolStripNumericUpDown2.Value = new decimal(new int[] {
+            256,
+            0,
+            0,
+            0});
+            this.toolStripNumericUpDown2.TextChanged += new System.EventHandler(this.toolStripNumericUpDown2_TextChanged);
             // 
             // MainForm
             // 
@@ -686,6 +834,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(879, 570);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
@@ -712,6 +861,8 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -757,16 +908,9 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.ToolStripMenuItem EnabledDrawRect;
-        private System.Windows.Forms.ToolStripMenuItem 矩形縦横比ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem AnyAspects_ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem SquareRectangle_ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ExportOriginal_ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ExportImglab_ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem FixedRectangle_ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem MappingRectangle;
-        private System.Windows.Forms.ToolStripMenuItem Delete_ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem DeleteOne_ToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem DeleteAll_ToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem OutRectangle_ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem EnabledAdjust;
         private System.Windows.Forms.ToolStripMenuItem EnabledPadding;
@@ -776,13 +920,30 @@
         private System.Windows.Forms.ToolStripMenuItem ExportFillOne_ToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem ExportFillAll_ToolStripMenuItem1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.ToolStripMenuItem EnabledScaling_ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem EnabledFillBox_ToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem Remove_ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem EnabledCheckerBoard_ToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private ToolStripNumericUpDown toolStripNumericUpDown1;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel3;
+        private ToolStripNumericUpDown toolStripNumericUpDown2;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton toolStripButton3;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem EnabledCheckerBoard_ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolStripButton4;
+        private System.Windows.Forms.ToolStripButton toolStripButton5;
+        private System.Windows.Forms.ToolStripMenuItem 編集EToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DeleteAll_ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SelectAll_ToolStripMenuItem;
     }
 }
 

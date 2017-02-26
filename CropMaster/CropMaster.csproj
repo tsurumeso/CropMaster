@@ -78,12 +78,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SizeEditorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SizeEditorForm.Designer.cs">
-      <DependentUpon>SizeEditorForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,9 +105,9 @@
       <DependentUpon>RectEditorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SerialNameGenerator.cs" />
-    <EmbeddedResource Include="SizeEditorForm.resx">
-      <DependentUpon>SizeEditorForm.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="ToolStripNumericUpDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

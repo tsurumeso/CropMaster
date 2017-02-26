@@ -57,45 +57,41 @@ namespace CropMaster
 
         private void ChangeNumericValuesManualy(Rectangle rect)
         {
-            numericUpDown1.ValueChanged -= numericUpDown1_ValueChanged;
-            numericUpDown2.ValueChanged -= numericUpDown2_ValueChanged;
-            numericUpDown3.ValueChanged -= numericUpDown3_ValueChanged;
-            numericUpDown4.ValueChanged -= numericUpDown4_ValueChanged;
+            numericUpDownEx2.ValueChanged -= numericUpDown2_ValueChanged;
+            numericUpDownEx3.ValueChanged -= numericUpDown3_ValueChanged;
+            numericUpDownEx4.ValueChanged -= numericUpDown4_ValueChanged;
+            numericUpDownEx5.ValueChanged -= numericUpDown5_ValueChanged;
 
-            numericUpDown2.Value = rect.X;
-            numericUpDown3.Value = rect.Y;
-            numericUpDown4.Value = rect.Width;
-            numericUpDown1.Value = rect.Height;
+            numericUpDownEx2.Value = rect.X;
+            numericUpDownEx3.Value = rect.Y;
+            numericUpDownEx4.Value = rect.Width;
+            numericUpDownEx5.Value = rect.Height;
 
-            numericUpDown1.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown2.ValueChanged += numericUpDown2_ValueChanged;
-            numericUpDown3.ValueChanged += numericUpDown3_ValueChanged;
-            numericUpDown4.ValueChanged += numericUpDown4_ValueChanged;
+            numericUpDownEx2.ValueChanged += numericUpDown2_ValueChanged;
+            numericUpDownEx3.ValueChanged += numericUpDown3_ValueChanged;
+            numericUpDownEx4.ValueChanged += numericUpDown4_ValueChanged;
+            numericUpDownEx5.ValueChanged += numericUpDown5_ValueChanged;
         }
 
         public void UpdatePictureBox(Image rectImage, Rectangle rect, int idx)
         {
             currentRectIndex = idx;
-
             ChangeNumericValuesManualy(rect);
 
             if (rectImage == null && pictureBox1.Image != null)
-            {
                 pictureBox1.Image.Dispose();
-            }
+
             pictureBox1.Image = rectImage;
         }
 
         public void InitializePictureBox()
         {
             currentRectIndex = -1;
-
-            ChangeNumericValuesManualy(new Rectangle(0, 0, 0, 0));
+            ChangeNumericValuesManualy(new Rectangle(0, 0, 1, 1));
 
             if (pictureBox1.Image != null)
-            {
                 pictureBox1.Image.Dispose();
-            }
+
             pictureBox1.Image = null;
         }
 
@@ -153,37 +149,32 @@ namespace CropMaster
 
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
         {
-            ((MainForm)this.Owner).SetMemberRectangle("X", (int)numericUpDown2.Value, currentRectIndex);
+            ((MainForm)this.Owner).SetMemberRectangle("X", (int)numericUpDownEx2.Value, currentRectIndex);
         }
 
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
         {
-            ((MainForm)this.Owner).SetMemberRectangle("Y", (int)numericUpDown3.Value, currentRectIndex);
+            ((MainForm)this.Owner).SetMemberRectangle("Y", (int)numericUpDownEx3.Value, currentRectIndex);
         }
 
         private void numericUpDown4_ValueChanged(object sender, EventArgs e)
         {
-            ((MainForm)this.Owner).SetMemberRectangle("Width", (int)numericUpDown4.Value, currentRectIndex);
+            ((MainForm)this.Owner).SetMemberRectangle("Width", (int)numericUpDownEx4.Value, currentRectIndex);
         }
 
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        private void numericUpDown5_ValueChanged(object sender, EventArgs e)
         {
-            ((MainForm)this.Owner).SetMemberRectangle("Height", (int)numericUpDown1.Value, currentRectIndex);
+            ((MainForm)this.Owner).SetMemberRectangle("Height", (int)numericUpDownEx5.Value, currentRectIndex);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ((MainForm)this.Owner).InflateRect((int)numericUpDown5.Value, currentRectIndex);
+            ((MainForm)this.Owner).InflateRect((int)numericUpDownEx1.Value, currentRectIndex);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            ((MainForm)this.Owner).InflateRect(-(int)numericUpDown5.Value, currentRectIndex);
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
+            ((MainForm)this.Owner).InflateRect(-(int)numericUpDownEx1.Value, currentRectIndex);
         }
     }
 }
