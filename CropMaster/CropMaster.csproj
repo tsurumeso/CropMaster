@@ -105,6 +105,9 @@
       <DependentUpon>RectEditorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SerialNameGenerator.cs" />
+    <Compile Include="MainFormFunctions.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ToolStripNumericUpDown.cs">
       <SubType>Component</SubType>
     </Compile>
