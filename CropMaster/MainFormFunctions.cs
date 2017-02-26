@@ -960,10 +960,13 @@ namespace CropMaster
             Open_ToolStripMenuItem.Enabled = flag;
             ExportCrop_ToolStripMenuItem.Enabled = flag;
             ExportFill_ToolStripMenuItem.Enabled = flag;
+            ExportImglab_ToolStripMenuItem.Enabled = flag;
             ExportXml_ToolStripMenuItem.Enabled = flag;
-            ImportXml_ToolStripMenuItem.Enabled = flag;
+            SaveXml_ToolStripMenuItem.Enabled = flag;
+            LoadXml_ToolStripMenuItem.Enabled = flag;
             RandomCrop_ToolStripMenuItem.Enabled = flag;
             RandomCropAll_ToolStripMenuItem.Enabled = flag;
+            toolStripButton5.Enabled = flag;
         }
 
         private void InitializeControlMode(bool flag)
@@ -971,9 +974,12 @@ namespace CropMaster
             MappingRectangle.Enabled = flag;
             ExportCrop_ToolStripMenuItem.Enabled = flag;
             ExportFill_ToolStripMenuItem.Enabled = flag;
+            ExportImglab_ToolStripMenuItem.Enabled = flag;
             ExportXml_ToolStripMenuItem.Enabled = flag;
+            SaveXml_ToolStripMenuItem.Enabled = flag;
             RandomCrop_ToolStripMenuItem.Enabled = flag;
             RandomCropAll_ToolStripMenuItem.Enabled = flag;
+            toolStripButton5.Enabled = flag;
         }
 
         public void SetFixedRectangleSize(int width, int height)
