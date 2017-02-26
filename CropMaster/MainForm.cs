@@ -307,12 +307,12 @@ namespace CropMaster
             }
         }
 
-        private void ColorSelect_ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SelectColor_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ColorDialog cd = new ColorDialog();
 
             // はじめに選択されている色を設定
-            //cd.Color = TextBox1.BackColor;
+            cd.Color = Color.Red;
             cd.AllowFullOpen = true;
             cd.SolidColorOnly = false;
             // [作成した色]に指定した色（RGB値）を表示する
@@ -567,16 +567,6 @@ namespace CropMaster
                 LockWindowUpdate(IntPtr.Zero);
             else
                 LockWindowUpdate(this.Handle);
-        }
-
-        private void toolStripButton2_Click(object sender, EventArgs e)
-        {
-            UpdateFillBoxState(!toolStripButton2.Checked);
-        }
-
-        private void toolStripButton3_Click(object sender, EventArgs e)
-        {
-            UpdateCheckerBoardState(!toolStripButton3.Checked);
         }
 
         private void EnabledFillBox_ToolStripMenuItem_Click(object sender, EventArgs e)

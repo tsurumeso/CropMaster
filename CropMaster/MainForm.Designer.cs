@@ -66,7 +66,7 @@
             this.EnabledPadding = new System.Windows.Forms.ToolStripMenuItem();
             this.MappingRectangle = new System.Windows.Forms.ToolStripMenuItem();
             this.EnabledSelectionMove = new System.Windows.Forms.ToolStripMenuItem();
-            this.ColorSelect_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SelectColor_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ヘルプHToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.About_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -98,6 +98,7 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
@@ -341,7 +342,7 @@
             this.OutRectangle_ToolStripMenuItem,
             this.MappingRectangle,
             this.EnabledSelectionMove,
-            this.ColorSelect_ToolStripMenuItem});
+            this.SelectColor_ToolStripMenuItem});
             this.ツールTToolStripMenuItem.Name = "ツールTToolStripMenuItem";
             this.ツールTToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.ツールTToolStripMenuItem.Text = "ツール(&T)";
@@ -408,12 +409,12 @@
             this.EnabledSelectionMove.Text = "領域選択後次の画像へ移動";
             this.EnabledSelectionMove.Click += new System.EventHandler(this.EnabledSelectionMove_Click);
             // 
-            // ColorSelect_ToolStripMenuItem
+            // SelectColor_ToolStripMenuItem
             // 
-            this.ColorSelect_ToolStripMenuItem.Name = "ColorSelect_ToolStripMenuItem";
-            this.ColorSelect_ToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.ColorSelect_ToolStripMenuItem.Text = "領域の色指定";
-            this.ColorSelect_ToolStripMenuItem.Click += new System.EventHandler(this.ColorSelect_ToolStripMenuItem_Click);
+            this.SelectColor_ToolStripMenuItem.Name = "SelectColor_ToolStripMenuItem";
+            this.SelectColor_ToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.SelectColor_ToolStripMenuItem.Text = "領域の色指定";
+            this.SelectColor_ToolStripMenuItem.Click += new System.EventHandler(this.SelectColor_ToolStripMenuItem_Click);
             // 
             // ヘルプHToolStripMenuItem
             // 
@@ -667,6 +668,7 @@
             this.toolStripSeparator4,
             this.toolStripButton2,
             this.toolStripButton3,
+            this.toolStripButton6,
             this.toolStripSeparator5,
             this.toolStripLabel1,
             this.toolStripComboBox1,
@@ -723,7 +725,7 @@
             this.toolStripButton2.Name = "toolStripButton2";
             this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton2.Text = "画面に合わせる";
-            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            this.toolStripButton2.Click += new System.EventHandler(this.EnabledFillBox_ToolStripMenuItem_Click);
             // 
             // toolStripButton3
             // 
@@ -733,7 +735,17 @@
             this.toolStripButton3.Name = "toolStripButton3";
             this.toolStripButton3.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton3.Text = "チェッカーボード";
-            this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
+            this.toolStripButton3.Click += new System.EventHandler(this.EnabledCheckerBoard_ToolStripMenuItem_Click);
+            // 
+            // toolStripButton6
+            // 
+            this.toolStripButton6.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton6.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton6.Image")));
+            this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton6.Name = "toolStripButton6";
+            this.toolStripButton6.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton6.Text = "領域の色指定";
+            this.toolStripButton6.Click += new System.EventHandler(this.SelectColor_ToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
@@ -901,7 +913,7 @@
         private System.Windows.Forms.ToolStripMenuItem RandomCrop_ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem RandomCropThis_ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem RandomCropAll_ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ColorSelect_ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SelectColor_ToolStripMenuItem;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.ToolStripMenuItem 表示VToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem EnabledRectEditorForm;
@@ -944,6 +956,7 @@
         private System.Windows.Forms.ToolStripMenuItem SelectAll_ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SaveXml_ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ExportXml_ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolStripButton6;
     }
 }
 
