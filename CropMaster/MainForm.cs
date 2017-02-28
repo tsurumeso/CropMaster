@@ -111,7 +111,8 @@ namespace CropMaster
                     }
                     break;
                 case MouseButtons.Right:
-                    RemoveRectangle(SearchRectangle(mouseCurrent));
+                    if (mMovingRectIndex == -1)
+                        RemoveRectangle(SearchRectangle(mouseCurrent));
                     break;
             }
         }
