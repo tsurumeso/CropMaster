@@ -14,6 +14,7 @@ namespace CropMaster
 {
     partial class MainForm
     {
+        RandomNumberGenerator rng = RandomNumberGenerator.Create();
         delegate void UpdateScaleAndPadDelegate(string path);
         delegate void AdjustRectangleToImageDelegate(ref Rectangle rect);
 
@@ -508,7 +509,17 @@ namespace CropMaster
             return dst;
         }
 
-        private int RandomInteger(RandomNumberGenerator rng, int start, int end)
+        ProgressForm GetProgressForm(int max)
+        {
+            ProgressForm progressForm = new ProgressForm(max);
+            progressForm.Owner = this;
+            progressForm.Left = this.Left + (this.Width - progressForm.Width) / 2;
+            progressForm.Top = this.Top + (this.Height - progressForm.Height) / 2;
+
+            return progressForm;
+        }
+
+        static private int RandomInteger(RandomNumberGenerator rng, int start, int end)
         {
             byte[] rand = new byte[4];
             rng.GetBytes(rand);
@@ -516,7 +527,7 @@ namespace CropMaster
             return ret;
         }
 
-        private void RandomCrop(RandomNumberGenerator rng, int idx, int n, int min, int max)
+        private void RandomCrop(int idx, int n, int min, int max)
         {
             Bitmap baseImage = new Bitmap(mBaseImages[idx].Path);
             int baseMin = Math.Min(baseImage.Size.Width, baseImage.Size.Height);
@@ -534,21 +545,10 @@ namespace CropMaster
 
         public void RandomCropOne(int n, int min, int max)
         {
-            var rng = RandomNumberGenerator.Create();
-            RandomCrop(rng, mCurrentImageIndex, n, min, max);
+            RandomCrop(mCurrentImageIndex, n, min, max);
             UpdateRectangles();
             UpdateRectListView();
             UpdateRectEditorForm();
-        }
-
-        ProgressForm GetProgressForm(int max)
-        {
-            ProgressForm progressForm = new ProgressForm(max);
-            progressForm.Owner = this;
-            progressForm.Left = this.Left + (this.Width - progressForm.Width) / 2;
-            progressForm.Top = this.Top + (this.Height - progressForm.Height) / 2;
-
-            return progressForm;
         }
 
         public async void RandomCropAll(int n, int min, int max)
@@ -556,7 +556,6 @@ namespace CropMaster
             try
             {
                 SetControlMode(false);
-                var rng = RandomNumberGenerator.Create();
                 using (var progressForm = GetProgressForm(mBaseImages.Count))
                 {
                     progressForm.Show();
@@ -564,7 +563,7 @@ namespace CropMaster
                     {
                         for (int i = 0; i < mBaseImages.Count; i++)
                         {
-                            RandomCrop(rng, i, n, min, max);
+                            RandomCrop(i, n, min, max);
 
                             if (progressForm.isCancelled)
                                 throw new OperationCanceledException();

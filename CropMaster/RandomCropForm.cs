@@ -19,13 +19,13 @@ namespace CropMaster
             int max = 0;
             if (radioButton1.Checked)
             {
-                min = (int)numericUpDownEx2.Value;
+                min = (int)numericUpDownEx4.Value;
                 max = min;
             }
             else
             {
-                min = (int)numericUpDownEx3.Value;
-                max = (int)numericUpDownEx4.Value;
+                min = (int)numericUpDownEx2.Value;
+                max = (int)numericUpDownEx3.Value;
             }
 
             if (isOne)
