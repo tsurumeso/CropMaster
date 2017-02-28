@@ -226,6 +226,7 @@
             // 
             // numericUpDownEx1
             // 
+            this.numericUpDownEx1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownEx1.Location = new System.Drawing.Point(186, 346);
             this.numericUpDownEx1.Minimum = new decimal(new int[] {
             1,
@@ -243,6 +244,7 @@
             // 
             // numericUpDownEx2
             // 
+            this.numericUpDownEx2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownEx2.Location = new System.Drawing.Point(186, 373);
             this.numericUpDownEx2.Maximum = new decimal(new int[] {
             32768,
@@ -260,6 +262,7 @@
             // 
             // numericUpDownEx3
             // 
+            this.numericUpDownEx3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownEx3.Location = new System.Drawing.Point(186, 400);
             this.numericUpDownEx3.Maximum = new decimal(new int[] {
             32768,
@@ -277,6 +280,7 @@
             // 
             // numericUpDownEx4
             // 
+            this.numericUpDownEx4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownEx4.Location = new System.Drawing.Point(186, 427);
             this.numericUpDownEx4.Maximum = new decimal(new int[] {
             65536,
@@ -299,6 +303,7 @@
             // 
             // numericUpDownEx5
             // 
+            this.numericUpDownEx5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownEx5.Location = new System.Drawing.Point(186, 454);
             this.numericUpDownEx5.Maximum = new decimal(new int[] {
             65536,

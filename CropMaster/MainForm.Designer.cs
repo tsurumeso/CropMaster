@@ -855,6 +855,7 @@
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MinimumSize = new System.Drawing.Size(640, 360);
             this.Name = "MainForm";
             this.Text = "CropMaster";
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
