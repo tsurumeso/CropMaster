@@ -10,16 +10,11 @@ namespace CropMaster
 {
     public partial class MainForm : Form
     {
-        const string mVersionString = "1.0.0";
-        string[] mAvailableFormats = new string[] { ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tiff", ".tif" };
-        const int mAlpha = 128;
-
-        float mScale;
-        int mPadX, mPadY;
-
-        bool mIsDrawing = false;
         string mXmlFilePath = null;
-        string mWorkingDirectory = null;
+        const string mVersionString = "1.0.0";
+        const string mXmlSaveString = "XML形式で保存(&S)";
+        const string mXmlSaveAsString = "XML形式で名前を付けて保存(&A)";
+        bool mIsDrawing = false;
         int mMovingRectIndex = -1;
         int mCurrentImageIndex = -1;
         int mCurrentRectIndex = -1;
@@ -28,10 +23,9 @@ namespace CropMaster
         int mFixedWidth = 256, mFixedHeight = 256;
 
         Graphics mDrawer;
-        Bitmap mBackgroundImage;
-        Rectangle mOldRect = new Rectangle(0, 0, 0, 0);
+        Point mMouseDown = new Point();
+        RectEditorForm mRectEditorForm;
         List<ImageContainer> mBaseImages = new List<ImageContainer>();
-
         Color mColor = Color.Red;
         Color mReverseColor
         {
@@ -40,9 +34,6 @@ namespace CropMaster
                 return Color.FromArgb(~mColor.ToArgb() | (0xff << 24));
             }
         }
-
-        RectEditorForm mRectEditorForm;
-        Point mMouseDown = new Point();
 
         [DllImport("user32.dll", SetLastError = true)]
         private static extern bool LockWindowUpdate(IntPtr hWnd);
@@ -242,6 +233,9 @@ namespace CropMaster
 
         private void Open_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            mXmlFilePath = null;
+            SaveXml_ToolStripMenuItem.Text = mXmlSaveString;
+            SaveAsXml_ToolStripMenuItem.Text = mXmlSaveAsString;
             DialogResult dr = folderBrowserDialog1.ShowDialog();
             if (dr == System.Windows.Forms.DialogResult.OK)
                 InitializeImageContainers(folderBrowserDialog1.SelectedPath);
@@ -609,13 +603,6 @@ namespace CropMaster
             mFixedHeight = (int)toolStripNumericUpDown2.Value;
         }
 
-        private void toolStripButton4_Click(object sender, EventArgs e)
-        {
-            DialogResult dr = folderBrowserDialog1.ShowDialog();
-            if (dr == System.Windows.Forms.DialogResult.OK)
-                InitializeImageContainers(folderBrowserDialog1.SelectedPath);
-        }
-
         private void DeleteAll_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             foreach (ImageContainer baseImage in mBaseImages)
@@ -654,47 +641,8 @@ namespace CropMaster
                 Deserialize(ofd.FileName);
                 mXmlFilePath = ofd.FileName;
                 SaveXml_ToolStripMenuItem.Text = String.Format("{0} の保存(&S)", Path.GetFileName(ofd.FileName));
-                ExportXml_ToolStripMenuItem.Text = String.Format("名前を付けて {0} を保存(&A)", Path.GetFileName(ofd.FileName));
+                SaveAsXml_ToolStripMenuItem.Text = String.Format("名前を付けて {0} を保存(&A)", Path.GetFileName(ofd.FileName));
             }
-        }
-
-        private void ExportXml_ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.FileName = "output.xml";
-            sfd.Filter = "XMLファイル(*.xml)|*.xml";
-            sfd.Title = "保存先のファイルを選択してください";
-            // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
-            sfd.RestoreDirectory = true;
-            // 既に存在するファイル名を指定したとき警告する
-            sfd.OverwritePrompt = true;
-            // 存在しないパスが指定されたとき警告を表示する
-            sfd.CheckPathExists = true;
-
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                Serialize(sfd.FileName);
-                mXmlFilePath = sfd.FileName;
-                SaveXml_ToolStripMenuItem.Text = String.Format("{0} の保存(&S)", Path.GetFileName(sfd.FileName));
-                ExportXml_ToolStripMenuItem.Text = String.Format("名前を付けて {0} を保存(&A)", Path.GetFileName(sfd.FileName));
-            }
-        }
-
-        private void ExportImglab_ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.FileName = "output.xml";
-            sfd.Filter = "XMLファイル(*.xml)|*.xml";
-            sfd.Title = "保存先のファイルを選択してください";
-            // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
-            sfd.RestoreDirectory = true;
-            // 既に存在するファイル名を指定したとき警告する
-            sfd.OverwritePrompt = true;
-            // 存在しないパスが指定されたとき警告を表示する
-            sfd.CheckPathExists = true;
-
-            if (sfd.ShowDialog() == DialogResult.OK)
-                SerializeOpenCV(sfd.FileName);
         }
 
         private void SaveXml_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -719,9 +667,48 @@ namespace CropMaster
                     Serialize(sfd.FileName);
                     mXmlFilePath = sfd.FileName;
                     SaveXml_ToolStripMenuItem.Text = String.Format("{0} の保存(&S)", Path.GetFileName(sfd.FileName));
-                    ExportXml_ToolStripMenuItem.Text = String.Format("名前を付けて {0} を保存(&A)", Path.GetFileName(sfd.FileName));
+                    SaveAsXml_ToolStripMenuItem.Text = String.Format("名前を付けて {0} を保存(&A)", Path.GetFileName(sfd.FileName));
                 }
             }
+        }
+
+        private void SaveAsXml_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.FileName = "output.xml";
+            sfd.Filter = "XMLファイル(*.xml)|*.xml";
+            sfd.Title = "保存先のファイルを選択してください";
+            // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
+            sfd.RestoreDirectory = true;
+            // 既に存在するファイル名を指定したとき警告する
+            sfd.OverwritePrompt = true;
+            // 存在しないパスが指定されたとき警告を表示する
+            sfd.CheckPathExists = true;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                Serialize(sfd.FileName);
+                mXmlFilePath = sfd.FileName;
+                SaveXml_ToolStripMenuItem.Text = String.Format("{0} の保存(&S)", Path.GetFileName(sfd.FileName));
+                SaveAsXml_ToolStripMenuItem.Text = String.Format("名前を付けて {0} を保存(&A)", Path.GetFileName(sfd.FileName));
+            }
+        }
+
+        private void ExportImglab_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.FileName = "output.xml";
+            sfd.Filter = "XMLファイル(*.xml)|*.xml";
+            sfd.Title = "保存先のファイルを選択してください";
+            // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
+            sfd.RestoreDirectory = true;
+            // 既に存在するファイル名を指定したとき警告する
+            sfd.OverwritePrompt = true;
+            // 存在しないパスが指定されたとき警告を表示する
+            sfd.CheckPathExists = true;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+                SerializeOpenCV(sfd.FileName);
         }
     }
 }

@@ -46,7 +46,7 @@
             this.ExportFillAll_ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.SaveXml_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ExportXml_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SaveAsXml_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExportImglab_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.Exit_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -166,7 +166,7 @@
             this.ExportFill_ToolStripMenuItem,
             this.toolStripSeparator2,
             this.SaveXml_ToolStripMenuItem,
-            this.ExportXml_ToolStripMenuItem,
+            this.SaveAsXml_ToolStripMenuItem,
             this.ExportImglab_ToolStripMenuItem,
             this.toolStripSeparator1,
             this.Exit_ToolStripMenuItem});
@@ -251,12 +251,12 @@
             this.SaveXml_ToolStripMenuItem.Text = "XML形式で保存(&S)";
             this.SaveXml_ToolStripMenuItem.Click += new System.EventHandler(this.SaveXml_ToolStripMenuItem_Click);
             // 
-            // ExportXml_ToolStripMenuItem
+            // SaveAsXml_ToolStripMenuItem
             // 
-            this.ExportXml_ToolStripMenuItem.Name = "ExportXml_ToolStripMenuItem";
-            this.ExportXml_ToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.ExportXml_ToolStripMenuItem.Text = "XML形式で名前を付けて保存(&A)";
-            this.ExportXml_ToolStripMenuItem.Click += new System.EventHandler(this.ExportXml_ToolStripMenuItem_Click);
+            this.SaveAsXml_ToolStripMenuItem.Name = "SaveAsXml_ToolStripMenuItem";
+            this.SaveAsXml_ToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.SaveAsXml_ToolStripMenuItem.Text = "XML形式で名前を付けて保存(&A)";
+            this.SaveAsXml_ToolStripMenuItem.Click += new System.EventHandler(this.SaveAsXml_ToolStripMenuItem_Click);
             // 
             // ExportImglab_ToolStripMenuItem
             // 
@@ -690,7 +690,7 @@
             this.toolStripButton4.Name = "toolStripButton4";
             this.toolStripButton4.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton4.Text = "フォルダを開く";
-            this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton4_Click);
+            this.toolStripButton4.Click += new System.EventHandler(this.Open_ToolStripMenuItem_Click);
             // 
             // toolStripButton1
             // 
@@ -956,7 +956,7 @@
         private System.Windows.Forms.ToolStripMenuItem DeleteAll_ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SelectAll_ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SaveXml_ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ExportXml_ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SaveAsXml_ToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButton6;
     }
 }

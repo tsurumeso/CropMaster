@@ -14,7 +14,16 @@ namespace CropMaster
 {
     partial class MainForm
     {
+        string mWorkingDirectory = null;
+        string[] mAvailableFormats = new string[] { ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tiff", ".tif" };
+        float mScale;
+        int mPadX, mPadY;
+        const int mAlpha = 128;
+
+        Bitmap mBackgroundImage;
+        Rectangle mOldRect = new Rectangle(0, 0, 0, 0);
         RandomNumberGenerator rng = RandomNumberGenerator.Create();
+
         delegate void UpdateScaleAndPadDelegate(string path);
         delegate void AdjustRectangleToImageDelegate(ref Rectangle rect);
 
@@ -594,7 +603,7 @@ namespace CropMaster
             }
         }
 
-        private List<string> GetFilesRecursive(string dir, string[] ext)
+        static private List<string> GetFilesRecursive(string dir, string[] ext)
         {
             List<string> files = new List<string>();
             try
@@ -614,19 +623,18 @@ namespace CropMaster
             return files;
         }
 
-        private async void InitializeImageContainers(string dir)
+        private async void InitializeImageContainers(string workingDirectory)
         {
             try
             {
                 SetControlMode(false);
-                mWorkingDirectory = dir;
-                string tmpdir = mWorkingDirectory.TrimEnd('\\') + "\\";
-                List<string> files = await Task.Run(() => GetFilesRecursive(mWorkingDirectory, mAvailableFormats));
+                mWorkingDirectory = workingDirectory;
+                string trimdir = workingDirectory.TrimEnd('\\') + "\\";
+                List<string> files = GetFilesRecursive(workingDirectory, mAvailableFormats);
 
                 if (files.Count == 0)
                     return;
-
-                if (mBaseImages != null)
+                else if (mBaseImages != null)
                     mBaseImages.Clear();
 
                 using (var progressForm = GetProgressForm(files.Count))
@@ -634,12 +642,12 @@ namespace CropMaster
                     progressForm.Show();
                     await Task.Run(() =>
                     {
+                        int removeIndex = files[0].IndexOf(trimdir) + trimdir.Length;
                         foreach (string file in files)
                         {
-                            int idx = file.IndexOf(tmpdir) + tmpdir.Length;
                             ImageContainer baseImage = new ImageContainer();
                             baseImage.Path = file;
-                            baseImage.FileName = file.Remove(0, idx);
+                            baseImage.FileName = file.Remove(0, removeIndex);
                             baseImage.Rectangles = new List<Rectangle>();
                             mBaseImages.Add(baseImage);
 
@@ -675,23 +683,22 @@ namespace CropMaster
 
         private void UpdateImageContainers(string currentFilePath, Dictionary<string, ImageContainer> xmlImages)
         {
-            string tmpdir = mWorkingDirectory.TrimEnd('\\') + "\\";
+            string trimdir = mWorkingDirectory.TrimEnd('\\') + "\\";
             List<string> files = GetFilesRecursive(mWorkingDirectory, mAvailableFormats);
 
             if (files.Count == 0)
                 return;
-
-            if (mBaseImages != null)
+            else if (mBaseImages != null)
                 mBaseImages.Clear();
 
+            int removeIndex = files[0].IndexOf(trimdir) + trimdir.Length;
             for (int i = 0; i < files.Count; i++)
             {
                 var baseImage = new ImageContainer();
                 if (!xmlImages.ContainsKey(files[i]))
                 {
-                    int idx = files[i].IndexOf(tmpdir) + tmpdir.Length;
                     baseImage.Path = files[i];
-                    baseImage.FileName = files[i].Remove(0, idx);
+                    baseImage.FileName = files[i].Remove(0, removeIndex);
                     baseImage.Rectangles = new List<Rectangle>();
                 }
                 else
@@ -711,7 +718,6 @@ namespace CropMaster
             sw.WriteLine("  <Headers>");
             sw.WriteLine(String.Format("    <Directory>{0}</Directory>", SecurityElement.Escape(mWorkingDirectory)));
             sw.WriteLine(String.Format("    <CurrentFilePath>{0}</CurrentFilePath>", SecurityElement.Escape(mBaseImages[mCurrentImageIndex].Path)));
-            sw.WriteLine(String.Format("    <RectangleColor>{0}</RectangleColor>", mColor.ToArgb()));
             sw.WriteLine("  </Headers>");
             foreach (ImageContainer baseImage in mBaseImages)
             {
@@ -751,10 +757,8 @@ namespace CropMaster
                     sw.WriteLine(String.Format("    <image file=\'{0}\'>", SecurityElement.Escape(imgPath)));
                     foreach (var c in baseImage.Rectangles)
                     {
-                        sw.Write(String.Format("      <box top=\'{0}\' ", c.Y));
-                        sw.Write(String.Format("left=\'{0}\' ", c.X));
-                        sw.Write(String.Format("width=\'{0}\' ", c.Width));
-                        sw.WriteLine(String.Format("height=\'{0}\'/>", c.Height));
+                        sw.WriteLine(String.Format("      <box top=\'{0}\' left=\'{1}\' width=\'{2}\' height=\'{3}\'/>",
+                            c.Y, c.X, c.Width, c.Height));
                     }
                     sw.WriteLine("    </image>");
                 }
@@ -773,8 +777,6 @@ namespace CropMaster
                 xmlDocument.Load(filepath);
                 mWorkingDirectory = xmlDocument.SelectSingleNode("Application/Headers/Directory").InnerText.Trim();
                 string currentFilePath = xmlDocument.SelectSingleNode("Application/Headers/CurrentFilePath").InnerText.Trim();
-                string rectangleColor = xmlDocument.SelectSingleNode("Application/Headers/RectangleColor").InnerText.Trim();
-                mColor = Color.FromArgb(Convert.ToInt32(rectangleColor));
                 XmlNodeList xmlNodeList1 = xmlDocument.SelectNodes("Application/ImageContainer");
 
                 using (var progressForm = GetProgressForm(xmlNodeList1.Count))
@@ -960,7 +962,7 @@ namespace CropMaster
             ExportCrop_ToolStripMenuItem.Enabled = flag;
             ExportFill_ToolStripMenuItem.Enabled = flag;
             ExportImglab_ToolStripMenuItem.Enabled = flag;
-            ExportXml_ToolStripMenuItem.Enabled = flag;
+            SaveAsXml_ToolStripMenuItem.Enabled = flag;
             SaveXml_ToolStripMenuItem.Enabled = flag;
             LoadXml_ToolStripMenuItem.Enabled = flag;
             RandomCrop_ToolStripMenuItem.Enabled = flag;
@@ -974,7 +976,7 @@ namespace CropMaster
             ExportCrop_ToolStripMenuItem.Enabled = flag;
             ExportFill_ToolStripMenuItem.Enabled = flag;
             ExportImglab_ToolStripMenuItem.Enabled = flag;
-            ExportXml_ToolStripMenuItem.Enabled = flag;
+            SaveAsXml_ToolStripMenuItem.Enabled = flag;
             SaveXml_ToolStripMenuItem.Enabled = flag;
             RandomCrop_ToolStripMenuItem.Enabled = flag;
             RandomCropAll_ToolStripMenuItem.Enabled = flag;
