@@ -175,7 +175,6 @@ namespace CropMaster
 
             pictureBox1.Image = new Bitmap(mBackgroundImage);
             mDrawer = Graphics.FromImage(pictureBox1.Image);
-            mDrawer.DrawImage(mBackgroundImage, 0, 0, mBackgroundImage.Width, mBackgroundImage.Height);
             return true;
         }
 
