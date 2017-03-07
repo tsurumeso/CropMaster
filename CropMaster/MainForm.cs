@@ -11,7 +11,7 @@ namespace CropMaster
     public partial class MainForm : Form
     {
         string mXmlFilePath = null;
-        const string mVersionString = "1.0.0";
+        const string mVersionString = "1.1.0";
         const string mXmlSaveString = "XML形式で保存(&S)";
         const string mXmlSaveAsString = "XML形式で名前を付けて保存(&A)";
         bool mIsDrawing = false;
