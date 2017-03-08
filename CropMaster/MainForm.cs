@@ -14,6 +14,7 @@ namespace CropMaster
         const string mVersionString = "1.1.0";
         const string mXmlSaveString = "XML形式で保存(&S)";
         const string mXmlSaveAsString = "XML形式で名前を付けて保存(&A)";
+        bool mIsRecursive = false;
         bool mIsDrawing = false;
         int mMovingRectIndex = -1;
         int mCurrentImageIndex = -1;
@@ -239,6 +240,16 @@ namespace CropMaster
             DialogResult dr = folderBrowserDialog1.ShowDialog();
             if (dr == System.Windows.Forms.DialogResult.OK)
                 InitializeImageContainers(folderBrowserDialog1.SelectedPath);
+        }
+
+        private void OpenRecursive_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mXmlFilePath = null;
+            SaveXml_ToolStripMenuItem.Text = mXmlSaveString;
+            SaveAsXml_ToolStripMenuItem.Text = mXmlSaveAsString;
+            DialogResult dr = folderBrowserDialog1.ShowDialog();
+            if (dr == System.Windows.Forms.DialogResult.OK)
+                InitializeImageContainers(folderBrowserDialog1.SelectedPath, true);
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)

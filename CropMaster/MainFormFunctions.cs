@@ -602,34 +602,49 @@ namespace CropMaster
             }
         }
 
-        static private List<string> GetFilesRecursive(string dir, string[] ext)
+        static private void GetFiles(string dir, string[] ext, List<string> files)
         {
-            List<string> files = new List<string>();
             try
             {
                 string[] entries = Directory.GetFileSystemEntries(dir);
+                foreach (string entry in entries)
+                {
+                    if (!Directory.Exists(entry) && ext.Contains(Path.GetExtension(entry).ToLower()))
+                        files.Add(entry);
+                }
+            }
+            catch { }
+        }
 
+        static private void GetFilesRecursive(string dir, string[] ext, List<string> files)
+        {
+            try
+            {
+                string[] entries = Directory.GetFileSystemEntries(dir);
                 foreach (string entry in entries)
                 {
                     if (Directory.Exists(entry))
-                        files.AddRange(GetFilesRecursive(entry, ext));
+                        GetFilesRecursive(entry, ext, files);
                     else if (ext.Contains(Path.GetExtension(entry).ToLower()))
                         files.Add(entry);
                 }
             }
             catch { }
-
-            return files;
         }
 
-        private async void InitializeImageContainers(string workingDirectory)
+        private async void InitializeImageContainers(string workingDirectory, bool isRecursive = false)
         {
             try
             {
+                var files = new List<string>();
                 SetControlMode(false);
+                mIsRecursive = isRecursive;
                 mWorkingDirectory = workingDirectory;
                 string trimdir = workingDirectory.TrimEnd('\\') + "\\";
-                List<string> files = GetFilesRecursive(workingDirectory, mAvailableFormats);
+                if (isRecursive)
+                    GetFilesRecursive(workingDirectory, mAvailableFormats, files);
+                else
+                    GetFiles(workingDirectory, mAvailableFormats, files);
 
                 if (files.Count == 0)
                     return;
@@ -683,7 +698,11 @@ namespace CropMaster
         private void UpdateImageContainers(string currentFilePath, Dictionary<string, ImageContainer> xmlImages)
         {
             string trimdir = mWorkingDirectory.TrimEnd('\\') + "\\";
-            List<string> files = GetFilesRecursive(mWorkingDirectory, mAvailableFormats);
+            List<string> files = new List<string>();
+            if (mIsRecursive)
+                GetFilesRecursive(mWorkingDirectory, mAvailableFormats, files);
+            else
+                GetFiles(mWorkingDirectory, mAvailableFormats, files);
 
             if (files.Count == 0)
                 return;
@@ -716,6 +735,7 @@ namespace CropMaster
             sw.WriteLine("<Application>");
             sw.WriteLine("  <Headers>");
             sw.WriteLine(String.Format("    <Directory>{0}</Directory>", SecurityElement.Escape(mWorkingDirectory)));
+            sw.WriteLine(String.Format("    <IsRecursive>{0}</IsRecursive>", mIsRecursive.ToString()));
             sw.WriteLine(String.Format("    <CurrentFilePath>{0}</CurrentFilePath>", SecurityElement.Escape(mBaseImages[mCurrentImageIndex].Path)));
             sw.WriteLine("  </Headers>");
             foreach (ImageContainer baseImage in mBaseImages)
@@ -775,6 +795,12 @@ namespace CropMaster
                 XmlDocument xmlDocument = new XmlDocument();
                 xmlDocument.Load(filepath);
                 mWorkingDirectory = xmlDocument.SelectSingleNode("Application/Headers/Directory").InnerText.Trim();
+                // 古いバージョンとの互換性維持
+                XmlNode isRecursiveNode = xmlDocument.SelectSingleNode("Application/Headers/IsRecursive");
+                if (isRecursiveNode != null)
+                    mIsRecursive = Convert.ToBoolean(isRecursiveNode.InnerText);
+                else
+                    mIsRecursive = true;
                 string currentFilePath = xmlDocument.SelectSingleNode("Application/Headers/CurrentFilePath").InnerText.Trim();
                 XmlNodeList xmlNodeList1 = xmlDocument.SelectNodes("Application/ImageContainer");
 
@@ -958,6 +984,7 @@ namespace CropMaster
         {
             MappingRectangle.Enabled = flag;
             Open_ToolStripMenuItem.Enabled = flag;
+            OpenRecursive_ToolStripMenuItem.Enabled = flag;
             ExportCrop_ToolStripMenuItem.Enabled = flag;
             ExportFill_ToolStripMenuItem.Enabled = flag;
             ExportImglab_ToolStripMenuItem.Enabled = flag;
