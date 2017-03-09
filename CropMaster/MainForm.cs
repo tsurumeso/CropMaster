@@ -234,22 +234,26 @@ namespace CropMaster
 
         private void Open_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mXmlFilePath = null;
             SaveXml_ToolStripMenuItem.Text = mXmlSaveString;
             SaveAsXml_ToolStripMenuItem.Text = mXmlSaveAsString;
             DialogResult dr = folderBrowserDialog1.ShowDialog();
             if (dr == System.Windows.Forms.DialogResult.OK)
+            {
+                mXmlFilePath = null;
                 InitializeImageContainers(folderBrowserDialog1.SelectedPath);
+            }
         }
 
         private void OpenRecursive_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mXmlFilePath = null;
             SaveXml_ToolStripMenuItem.Text = mXmlSaveString;
             SaveAsXml_ToolStripMenuItem.Text = mXmlSaveAsString;
             DialogResult dr = folderBrowserDialog1.ShowDialog();
             if (dr == System.Windows.Forms.DialogResult.OK)
+            {
+                mXmlFilePath = null;
                 InitializeImageContainers(folderBrowserDialog1.SelectedPath, true);
+            }
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
@@ -567,10 +571,18 @@ namespace CropMaster
         private void MainForm_DragDrop(object sender, DragEventArgs e)
         {
             string path = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
-            if (File.Exists(path))
+            if (File.Exists(path) && Path.GetExtension(path).ToLower() == ".xml")
+            {
                 Deserialize(path);
+                mXmlFilePath = path;
+                SaveXml_ToolStripMenuItem.Text = String.Format("{0} の保存(&S)", Path.GetFileName(path));
+                SaveAsXml_ToolStripMenuItem.Text = String.Format("名前を付けて {0} を保存(&A)", Path.GetFileName(path));
+            }
             else if (Directory.Exists(path))
+            {
+                mXmlFilePath = null;
                 InitializeImageContainers(path);
+            }
         }
 
         private void panel1_Scroll(object sender, ScrollEventArgs e)
