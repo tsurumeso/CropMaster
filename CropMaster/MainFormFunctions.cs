@@ -843,9 +843,6 @@ namespace CropMaster
                 UpdateRectangles();
                 UpdateRectListView();
                 UpdateRectEditorForm();
-
-                MessageBox.Show("XMLの読み込みが完了しました", "通知",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (OperationCanceledException)
             {

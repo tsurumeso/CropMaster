@@ -321,7 +321,10 @@ namespace CropMaster
             if (e.Button == MouseButtons.Left)
             {
                 var lvi = listView1.GetItemAt(e.X, e.Y);
-                UpdateRectangles(new int[] { lvi.Index });
+                if (lvi.Selected)
+                    UpdateRectangles(new int[] { lvi.Index });
+                else
+                    UpdateRectangles();
             }
         }
 
@@ -649,10 +652,8 @@ namespace CropMaster
         {
             listView1.Focus();
             listView1.BeginUpdate();
-            listView1.MultiSelect = true;
             for (int i = 0; i < listView1.Items.Count; i++)
                 listView1.Items[i].Selected = true;
-            listView1.MultiSelect = false;
             listView1.EndUpdate();
         }
 
