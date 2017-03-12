@@ -110,12 +110,12 @@ namespace CropMaster
             if (iw / ih > pw / ph)
             {
                 mScale = pw / iw;
-                mPadY = (int)((ph - (int)(ih * mScale)) / 2);
+                mPadY = (int)Math.Round((ph - (int)Math.Round(ih * mScale)) / 2);
             }
             else if (iw / ih < pw / ph)
             {
                 mScale = ph / ih;
-                mPadX = (int)((pw - (int)(iw * mScale)) / 2);
+                mPadX = (int)Math.Round((pw - (int)Math.Round(iw * mScale)) / 2);
             }
             else
                 mScale = 1f;
@@ -124,20 +124,20 @@ namespace CropMaster
         private Rectangle ConvertBoxToImage(Rectangle rect)
         {
             Rectangle imageRect = new Rectangle();
-            imageRect.X = (int)((rect.X - mPadX) / mScale);
-            imageRect.Y = (int)((rect.Y - mPadY) / mScale);
-            imageRect.Width = (int)(rect.Width / mScale);
-            imageRect.Height = (int)(rect.Height / mScale);
+            imageRect.X = (int)Math.Round((rect.X - mPadX) / mScale);
+            imageRect.Y = (int)Math.Round((rect.Y - mPadY) / mScale);
+            imageRect.Width = (int)Math.Round(rect.Width / mScale);
+            imageRect.Height = (int)Math.Round(rect.Height / mScale);
             return imageRect;
         }
 
         private Rectangle ConvertImageToBox(Rectangle rect)
         {
             Rectangle boxRect = new Rectangle();
-            boxRect.X = (int)(rect.X * mScale) + mPadX;
-            boxRect.Y = (int)(rect.Y * mScale) + mPadY;
-            boxRect.Width = (int)(rect.Width * mScale);
-            boxRect.Height = (int)(rect.Height * mScale);
+            boxRect.X = (int)Math.Round(rect.X * mScale) + mPadX;
+            boxRect.Y = (int)Math.Round(rect.Y * mScale) + mPadY;
+            boxRect.Width = (int)Math.Round(rect.Width * mScale);
+            boxRect.Height = (int)Math.Round(rect.Height * mScale);
             return boxRect;
         }
 
