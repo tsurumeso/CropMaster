@@ -209,7 +209,7 @@ namespace CropMaster
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (mBaseImages.Count == 0 || mCurrentImageIndex >= mBaseImages.Count)
+            if (mBaseImages.Count == 0 || mCurrentImageIndex >= mBaseImages.Count - 1)
                 return;
 
             for (int i = mCurrentImageIndex + 1; i < mBaseImages.Count; i++)

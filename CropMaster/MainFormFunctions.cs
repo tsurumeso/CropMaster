@@ -1014,7 +1014,7 @@ namespace CropMaster
 
         private void NextImage()
         {
-            if (mBaseImages.Count == 0 || mCurrentImageIndex >= mBaseImages.Count)
+            if (mBaseImages.Count == 0 || mCurrentImageIndex >= mBaseImages.Count - 1)
                 return;
 
             mCurrentImageIndex++;
