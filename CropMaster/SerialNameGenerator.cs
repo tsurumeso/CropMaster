@@ -22,7 +22,7 @@ namespace CropMaster
             this.dig = dig;
         }
 
-        public string Create(string dir, string oldName)
+        public string Create(string dir)
         {
             if (oldDir != dir)
             {
@@ -36,11 +36,8 @@ namespace CropMaster
                     .DefaultIfEmpty(0)                              // １つも該当しなかった場合は 0 とする
                     .Max();                                         // 最大値を取得する
             }
-            string ext = Path.GetExtension(oldName);
             string sn = (++initialMax).ToString().PadLeft(dig, '0');
-            string fileName = tagName + "_" + sn + ext;
-
-            return fileName;
+            return tagName + "_" + sn;
         }
     }
 }

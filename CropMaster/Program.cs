@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace CropMaster
@@ -17,12 +15,5 @@ namespace CropMaster
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
         }
-    }
-
-    public class ImageContainer
-    {
-        public string Path;
-        public string FileName;
-        public List<Rectangle> Rectangles;
     }
 }

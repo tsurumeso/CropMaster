@@ -37,17 +37,17 @@ namespace CropMaster
 
         private Rectangle GetRectangle(Point mouseDown, Point mouseCurrent)
         {
-            if (mWHRateIndex == 0)
-                return GetSquareRectangle(mouseDown, mouseCurrent);
-            else if (mWHRateIndex == 1)
+            if (mAspectRatioType == AspectRatioType.Squared)
+                return GetSquaredRectangle(mouseDown, mouseCurrent);
+            else if (mAspectRatioType == AspectRatioType.Fixed)
                 return GetFixedRectangle(mouseCurrent);
-            else if (mWHRateIndex == 2)
-                return GetAnyAspectsRectangle(mouseDown, mouseCurrent);
+            else if (mAspectRatioType == AspectRatioType.Free)
+                return GetFreeRatioRectangle(mouseDown, mouseCurrent);
 
             return new Rectangle(0, 0, 0, 0);
         }
 
-        private Rectangle GetAnyAspectsRectangle(Point mouseDown, Point mouseCurrent)
+        private Rectangle GetFreeRatioRectangle(Point mouseDown, Point mouseCurrent)
         {
             int startX = Math.Min(mouseCurrent.X, mouseDown.X);
             int startY = Math.Min(mouseCurrent.Y, mouseDown.Y);
@@ -64,7 +64,7 @@ namespace CropMaster
             return new Rectangle(mouseCurrent.X - (int)(width / 2), mouseCurrent.Y - (int)(height / 2), width, height);
         }
 
-        private Rectangle GetSquareRectangle(Point mouseDown, Point mouseCurrent)
+        private Rectangle GetSquaredRectangle(Point mouseDown, Point mouseCurrent)
         {
             Point startPoint = GetStartPoint(mouseDown, mouseCurrent);
             int dx = Math.Abs(mouseCurrent.X - mouseDown.X);
@@ -222,7 +222,7 @@ namespace CropMaster
                 pictureBox1.Update();
             }
             using (var dst = pictureBox1.CreateGraphics())
-            using (Pen colorPen = new Pen(color))
+            using (var colorPen = new Pen(color))
             {
                 colorPen.DashStyle = DashStyle.Dash;
                 dst.DrawRectangle(colorPen, rect);
@@ -257,7 +257,7 @@ namespace CropMaster
             if (imageRect.Width > 10 && imageRect.Height > 10)
             {
                 AdjustRectangle(ref imageRect);
-                if (mWHRateIndex == 1)
+                if (mAspectRatioType == AspectRatioType.Fixed)
                 {
                     imageRect.Width = mFixedWidth;
                     imageRect.Height = mFixedHeight;
@@ -401,16 +401,14 @@ namespace CropMaster
             if (imagePath == null)
                 return;
 
-            using (Stream fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
+            using (var fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
+            using (var ms = new MemoryStream())
             {
-                MemoryStream ms = new MemoryStream();
                 ms.SetLength(fs.Length);
                 fs.Read(ms.GetBuffer(), 0, (int)fs.Length);
                 ms.Flush();
-                Image src = Image.FromStream(ms);
-
-                SetScaleAndPad(src);
-                src.Dispose();
+                using (var src = Image.FromStream(ms))
+                    SetScaleAndPad(src);
             }
         }
 
@@ -433,30 +431,28 @@ namespace CropMaster
             }
 
             // ファイルロックの回避処理 gif 対応版
-            using (Stream fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
+            using (var fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
+            using (var ms = new MemoryStream())
             {
-                // MemoryStreamを生成しファイルの内容をコピー
-                MemoryStream ms = new MemoryStream();
                 ms.SetLength(fs.Length);
                 fs.Read(ms.GetBuffer(), 0, (int)fs.Length);
                 ms.Flush();
 
                 // フォーマット無視
-                Image src = Image.FromStream(ms);
-                pictureBox1.Image = new Bitmap(src.Width, src.Height);
+                using (var src = Image.FromStream(ms))
+                {
+                    // グラフィックオブジェクトのサイズを更新
+                    pictureBox1.Image = new Bitmap(src.Width, src.Height);
+                    mDrawer = Graphics.FromImage(pictureBox1.Image);
+                    mDrawer.DrawImage(src, 0, 0, src.Width, src.Height);
+                    mBackgroundImage = new Bitmap(src);
+                    SetScaleAndPad(pictureBox1.Image);
 
-                // グラフィックオブジェクトのサイズを更新
-                mDrawer = Graphics.FromImage(pictureBox1.Image);
-                mDrawer.DrawImage(src, 0, 0, src.Width, src.Height);
-
-                mBackgroundImage = new Bitmap(src);
-
-                SetScaleAndPad(pictureBox1.Image);
-                toolStripStatusLabel1.Text = String.Format("{0}    ", Path.GetFileName(imagePath));
-                toolStripStatusLabel2.Text = String.Format("{0}/{1}    ", mCurrentImageIndex + 1, mBaseImages.Count);
-                toolStripStatusLabel3.Text = String.Format("{0} x {1}    ", src.Width, src.Height);
-                toolStripStatusLabel4.Text = String.Format("{0}    ", src.PixelFormat.ToString().Replace("Format", ""));
-                src.Dispose();
+                    toolStripStatusLabel1.Text = String.Format("{0}    ", Path.GetFileName(imagePath));
+                    toolStripStatusLabel2.Text = String.Format("{0}/{1}    ", mCurrentImageIndex + 1, mBaseImages.Count);
+                    toolStripStatusLabel3.Text = String.Format("{0} x {1}    ", src.Width, src.Height);
+                    toolStripStatusLabel4.Text = String.Format("{0}    ", src.PixelFormat.ToString().Replace("Format", ""));
+                }
             }
         }
 
@@ -510,10 +506,11 @@ namespace CropMaster
         private Bitmap CropImage(Bitmap src, Rectangle srcRect)
         {
             Bitmap dst = new Bitmap(srcRect.Width, srcRect.Height);
-            Graphics g = Graphics.FromImage(dst);
-            Rectangle dstRect = new Rectangle(0, 0, srcRect.Width, srcRect.Height);
-            g.DrawImage(src, dstRect, srcRect, GraphicsUnit.Pixel);
-            g.Dispose();
+            using (Graphics g = Graphics.FromImage(dst))
+            {
+                Rectangle dstRect = new Rectangle(0, 0, srcRect.Width, srcRect.Height);
+                g.DrawImage(src, dstRect, srcRect, GraphicsUnit.Pixel);
+            }
             return dst;
         }
 
@@ -537,18 +534,19 @@ namespace CropMaster
 
         private void RandomCrop(int idx, int n, int min, int max)
         {
-            Bitmap baseImage = new Bitmap(mBaseImages[idx].Path);
-            int baseMin = Math.Min(baseImage.Size.Width, baseImage.Size.Height);
-            min = min < baseMin ? min : baseMin;
-            max = max < baseMin ? max : baseMin;
-            for (int i = 0; i < n; i++)
+            using (var baseImage = new Bitmap(mBaseImages[idx].Path))
             {
-                int width = RandomInteger(rng, min, max);
-                int x = RandomInteger(rng, 0, baseImage.Size.Width - width);
-                int y = RandomInteger(rng, 0, baseImage.Size.Height - width);
-                mBaseImages[idx].Rectangles.Add(new Rectangle(x, y, width, width));
+                int baseMin = Math.Min(baseImage.Size.Width, baseImage.Size.Height);
+                min = min < baseMin ? min : baseMin;
+                max = max < baseMin ? max : baseMin;
+                for (int i = 0; i < n; i++)
+                {
+                    int width = RandomInteger(rng, min, max);
+                    int x = RandomInteger(rng, 0, baseImage.Size.Width - width);
+                    int y = RandomInteger(rng, 0, baseImage.Size.Height - width);
+                    mBaseImages[idx].Rectangles.Add(new Rectangle(x, y, width, width));
+                }
             }
-            baseImage.Dispose();
         }
 
         public void RandomCropOne(int n, int min, int max)
@@ -933,18 +931,15 @@ namespace CropMaster
             if (mBaseImages[imageIndex].Rectangles.Count == 0)
                 return;
 
-            Bitmap baseImage = new Bitmap(mBaseImages[imageIndex].Path);
-            Graphics g = Graphics.FromImage(baseImage);
-            SolidBrush colorBrush = new SolidBrush(mColor);
-
-            for (int j = 0; j < mBaseImages[imageIndex].Rectangles.Count; j++)
+            using (var baseImage = new Bitmap(mBaseImages[imageIndex].Path))
+            using (Graphics g = Graphics.FromImage(baseImage))
+            using (var colorBrush = new SolidBrush(mColor))
             {
-                g.FillRectangle(colorBrush, mBaseImages[imageIndex].Rectangles[j]);
+                string savePath = exportDirectory + "\\" + sng.Create(exportDirectory) + ".png";
+                for (int j = 0; j < mBaseImages[imageIndex].Rectangles.Count; j++)
+                    g.FillRectangle(colorBrush, mBaseImages[imageIndex].Rectangles[j]);
+                baseImage.Save(savePath, System.Drawing.Imaging.ImageFormat.Png);
             }
-            g.Dispose();
-            string savePath = exportDirectory + "\\" + sng.Create(exportDirectory, "image" + imageIndex.ToString() + ".png");
-            baseImage.Save(savePath, System.Drawing.Imaging.ImageFormat.Png);
-            baseImage.Dispose();
         }
 
         private void ExportCropImage(int imageIndex, string exportDirectory, SerialNameGenerator sng)
@@ -952,20 +947,20 @@ namespace CropMaster
             if (mBaseImages[imageIndex].Rectangles.Count == 0)
                 return;
 
-            Bitmap baseImage = new Bitmap(mBaseImages[imageIndex].Path);
-
             int count = 0;
-            for (int j = 0; j < mBaseImages[imageIndex].Rectangles.Count; j++)
+            using (var baseImage = new Bitmap(mBaseImages[imageIndex].Path))
             {
-                Rectangle rect = mBaseImages[imageIndex].Rectangles[j];
-                Bitmap rectImage = CropImage(baseImage, rect);
-
-                string newFilePath = exportDirectory + "\\" + sng.Create(exportDirectory, "image" + count.ToString() + ".png");
-                rectImage.Save(newFilePath, System.Drawing.Imaging.ImageFormat.Png);
-                rectImage.Dispose();
-                count++;
+                for (int j = 0; j < mBaseImages[imageIndex].Rectangles.Count; j++)
+                {
+                    Rectangle rect = mBaseImages[imageIndex].Rectangles[j];
+                    using (Bitmap rectImage = CropImage(baseImage, rect))
+                    {
+                        string newFilePath = exportDirectory + "\\" + sng.Create(exportDirectory) + ".png";
+                        rectImage.Save(newFilePath, System.Drawing.Imaging.ImageFormat.Png);
+                    }
+                    count++;
+                }
             }
-            baseImage.Dispose();
         }
 
         private void ShowRectEditorForm()

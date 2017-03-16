@@ -20,8 +20,8 @@ namespace CropMaster
         int mCurrentImageIndex = -1;
         int mCurrentRectIndex = -1;
         int mOldOnRectIndex = -1;
-        int mWHRateIndex = 0;
         int mFixedWidth = 256, mFixedHeight = 256;
+        AspectRatioType mAspectRatioType = AspectRatioType.Squared;
 
         Graphics mDrawer;
         Point mMouseDown = new Point();
@@ -30,10 +30,7 @@ namespace CropMaster
         Color mColor = Color.Red;
         Color mReverseColor
         {
-            get
-            {
-                return Color.FromArgb(~mColor.ToArgb() | (0xff << 24));
-            }
+            get { return Color.FromArgb(~mColor.ToArgb() | (0xff << 24)); }
         }
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -610,8 +607,8 @@ namespace CropMaster
 
         private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            mWHRateIndex = toolStripComboBox1.SelectedIndex;
-            if (mWHRateIndex == 1)
+            mAspectRatioType = (AspectRatioType)toolStripComboBox1.SelectedIndex;
+            if (mAspectRatioType == AspectRatioType.Fixed)
             {
                 toolStripLabel2.Available = true;
                 toolStripLabel3.Available = true;
