@@ -12,8 +12,8 @@ namespace CropMaster
     {
         string mXmlFilePath = null;
         const string mVersionString = "1.1.0";
-        const string mXmlSaveString = "XML形式で保存(&S)";
-        const string mXmlSaveAsString = "XML形式で名前を付けて保存(&A)";
+        const string mXmlSaveString = "XML 形式で保存(&S)";
+        const string mXmlSaveAsString = "XML 形式で名前を付けて保存(&A)";
         bool mIsRecursive = false;
         bool mIsDrawing = false;
         int mMovingRectIndex = -1;
@@ -658,7 +658,7 @@ namespace CropMaster
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.FileName = "output.xml";
-            ofd.Filter = "XMLファイル(*.xml)|*.xml";
+            ofd.Filter = "XML ファイル(*.xml)|*.xml";
             ofd.Title = "開くファイルを選択してください";
             // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
             ofd.RestoreDirectory = true;
@@ -684,7 +684,7 @@ namespace CropMaster
             {
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.FileName = "output.xml";
-                sfd.Filter = "XMLファイル(*.xml)|*.xml";
+                sfd.Filter = "XML ファイル(*.xml)|*.xml";
                 sfd.Title = "保存先のファイルを選択してください";
                 // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
                 sfd.RestoreDirectory = true;
@@ -707,7 +707,7 @@ namespace CropMaster
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.FileName = "output.xml";
-            sfd.Filter = "XMLファイル(*.xml)|*.xml";
+            sfd.Filter = "XML ファイル(*.xml)|*.xml";
             sfd.Title = "保存先のファイルを選択してください";
             // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
             sfd.RestoreDirectory = true;
@@ -729,7 +729,7 @@ namespace CropMaster
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.FileName = "output.xml";
-            sfd.Filter = "XMLファイル(*.xml)|*.xml";
+            sfd.Filter = "XML ファイル(*.xml)|*.xml";
             sfd.Title = "保存先のファイルを選択してください";
             // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
             sfd.RestoreDirectory = true;

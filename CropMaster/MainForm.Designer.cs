@@ -188,7 +188,7 @@
             this.toolStripSeparator6,
             this.LoadXml_ToolStripMenuItem});
             this.開くOToolStripMenuItem.Name = "開くOToolStripMenuItem";
-            this.開くOToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.開くOToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.開くOToolStripMenuItem.Text = "開く(&O)";
             // 
             // Open_ToolStripMenuItem
@@ -220,7 +220,7 @@
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(232, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(235, 6);
             // 
             // ExportCrop_ToolStripMenuItem
             // 
@@ -228,7 +228,7 @@
             this.ExportCropOne_ToolStripMenuItem,
             this.ExportCropAll_ToolStripMenuItem});
             this.ExportCrop_ToolStripMenuItem.Name = "ExportCrop_ToolStripMenuItem";
-            this.ExportCrop_ToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.ExportCrop_ToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.ExportCrop_ToolStripMenuItem.Text = "選択領域の切り出し";
             // 
             // ExportCropOne_ToolStripMenuItem
@@ -251,7 +251,7 @@
             this.ExportFillOne_ToolStripMenuItem1,
             this.ExportFillAll_ToolStripMenuItem1});
             this.ExportFill_ToolStripMenuItem.Name = "ExportFill_ToolStripMenuItem";
-            this.ExportFill_ToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.ExportFill_ToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.ExportFill_ToolStripMenuItem.Text = "選択領域の塗りつぶし";
             // 
             // ExportFillOne_ToolStripMenuItem1
@@ -271,38 +271,38 @@
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(232, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(235, 6);
             // 
             // SaveXml_ToolStripMenuItem
             // 
             this.SaveXml_ToolStripMenuItem.Name = "SaveXml_ToolStripMenuItem";
-            this.SaveXml_ToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.SaveXml_ToolStripMenuItem.Text = "XML形式で保存(&S)";
+            this.SaveXml_ToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.SaveXml_ToolStripMenuItem.Text = "XML 形式で保存(&S)";
             this.SaveXml_ToolStripMenuItem.Click += new System.EventHandler(this.SaveXml_ToolStripMenuItem_Click);
             // 
             // SaveAsXml_ToolStripMenuItem
             // 
             this.SaveAsXml_ToolStripMenuItem.Name = "SaveAsXml_ToolStripMenuItem";
-            this.SaveAsXml_ToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.SaveAsXml_ToolStripMenuItem.Text = "XML形式で名前を付けて保存(&A)";
+            this.SaveAsXml_ToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.SaveAsXml_ToolStripMenuItem.Text = "XML 形式で名前を付けて保存(&A)";
             this.SaveAsXml_ToolStripMenuItem.Click += new System.EventHandler(this.SaveAsXml_ToolStripMenuItem_Click);
             // 
             // ExportImglab_ToolStripMenuItem
             // 
             this.ExportImglab_ToolStripMenuItem.Name = "ExportImglab_ToolStripMenuItem";
-            this.ExportImglab_ToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.ExportImglab_ToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.ExportImglab_ToolStripMenuItem.Text = "imglab dataset 形式で保存";
             this.ExportImglab_ToolStripMenuItem.Click += new System.EventHandler(this.ExportImglab_ToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(232, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(235, 6);
             // 
             // Exit_ToolStripMenuItem
             // 
             this.Exit_ToolStripMenuItem.Name = "Exit_ToolStripMenuItem";
-            this.Exit_ToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.Exit_ToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.Exit_ToolStripMenuItem.Text = "終了(&X)";
             this.Exit_ToolStripMenuItem.Click += new System.EventHandler(this.Exit_ToolStripMenuItem_Click);
             // 
@@ -456,8 +456,8 @@
             // About_ToolStripMenuItem
             // 
             this.About_ToolStripMenuItem.Name = "About_ToolStripMenuItem";
-            this.About_ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.About_ToolStripMenuItem.Text = "CropMasterについて";
+            this.About_ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.About_ToolStripMenuItem.Text = "CropMaster について";
             this.About_ToolStripMenuItem.Click += new System.EventHandler(this.About_ToolStripMenuItem_Click);
             // 
             // statusStrip1

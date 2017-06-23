@@ -7,26 +7,26 @@ namespace CropMaster
 {
     public class SerialNameGenerator
     {
-        int dig;
+        int digits;
+        int initialMax;
         string formatPattern;
         string tagName;
-        int initialMax;
         string oldDir;
 
-        public SerialNameGenerator(string tagName, int dig, string formatPattern)
+        public SerialNameGenerator(string tagName, int digits, string formatPattern)
         {
             initialMax = -1;
             oldDir = "";
             this.formatPattern = formatPattern;
             this.tagName = tagName;
-            this.dig = dig;
+            this.digits = digits;
         }
 
         public string Create(string dir)
         {
             if (oldDir != dir)
             {
-                string pattern = String.Format(@"(?i)_(\d{{{0}}})\.({1})$", dig, formatPattern);
+                string pattern = String.Format(@"(?i)_(\d{{{0}}})\.({1})$", digits, formatPattern);
                 DirectoryInfo di = new DirectoryInfo(dir);
 
                 initialMax = di.GetFiles(tagName + "_*.*")          // パターンに一致するファイルを取得する
@@ -36,8 +36,8 @@ namespace CropMaster
                     .DefaultIfEmpty(0)                              // １つも該当しなかった場合は 0 とする
                     .Max();                                         // 最大値を取得する
             }
-            string sn = (++initialMax).ToString().PadLeft(dig, '0');
-            return tagName + "_" + sn;
+            string serial = (++initialMax).ToString().PadLeft(digits, '0');
+            return tagName + "_" + serial;
         }
     }
 }

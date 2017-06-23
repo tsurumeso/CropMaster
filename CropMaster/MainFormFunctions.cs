@@ -22,7 +22,7 @@ namespace CropMaster
 
         Bitmap mBackgroundImage;
         Rectangle mOldRect = new Rectangle(0, 0, 0, 0);
-        RandomNumberGenerator rng = RandomNumberGenerator.Create();
+        RandomNumberGenerator mRandGen = RandomNumberGenerator.Create();
 
         delegate void UpdateScaleAndPadDelegate(string path);
         delegate void AdjustRectangleToImageDelegate(ref Rectangle rect);
@@ -541,9 +541,9 @@ namespace CropMaster
                 max = max < baseMin ? max : baseMin;
                 for (int i = 0; i < n; i++)
                 {
-                    int width = RandomInteger(rng, min, max);
-                    int x = RandomInteger(rng, 0, baseImage.Size.Width - width);
-                    int y = RandomInteger(rng, 0, baseImage.Size.Height - width);
+                    int width = RandomInteger(mRandGen, min, max);
+                    int x = RandomInteger(mRandGen, 0, baseImage.Size.Width - width);
+                    int y = RandomInteger(mRandGen, 0, baseImage.Size.Height - width);
                     mBaseImages[idx].Rectangles.Add(new Rectangle(x, y, width, width));
                 }
             }
@@ -873,10 +873,14 @@ namespace CropMaster
                 {
                     if (EnabledAdjust.Checked)
                     {
-                        if (rect.X < 0) rect.X = 0;
-                        else if (rect.X + rect.Width > pictureBox1.Image.Size.Width) rect.X = pictureBox1.Image.Size.Width - rect.Width;
-                        if (rect.Y < 0) rect.Y = 0;
-                        else if (rect.Y + rect.Height > pictureBox1.Image.Size.Height) rect.Y = pictureBox1.Image.Size.Height - rect.Height;
+                        if (rect.X < 0)
+                            rect.X = 0;
+                        else if (rect.X + rect.Width > pictureBox1.Image.Size.Width)
+                            rect.X = pictureBox1.Image.Size.Width - rect.Width;
+                        if (rect.Y < 0)
+                            rect.Y = 0;
+                        else if (rect.Y + rect.Height > pictureBox1.Image.Size.Height)
+                            rect.Y = pictureBox1.Image.Size.Height - rect.Height;
                     }
                     mBaseImages[mCurrentImageIndex].Rectangles[idx] = rect;
                     UpdateRectListView();
