@@ -630,12 +630,35 @@ namespace CropMaster
             catch { }
         }
 
+        private void InitializeImageContainers(string path)
+        {
+            SetControlMode(false);
+            mIsRecursive = false;
+            mWorkingDirectory = Path.GetDirectoryName(path);
+            if (mBaseImages != null)
+                mBaseImages.Clear();
+
+            ImageContainer baseImage = new ImageContainer();
+            baseImage.Path = path;
+            baseImage.FileName = Path.GetFileName(path);
+            baseImage.Rectangles = new List<Rectangle>();
+            mBaseImages.Add(baseImage);
+
+            mCurrentImageIndex = 0;
+            trackBar1.Maximum = mBaseImages.Count;
+            trackBar1.Value = 1;
+            UpdatePictureBox(mBaseImages[0].Path);
+            UpdateRectListView(false);
+            UpdateRectEditorForm();
+            SetControlMode(true);
+        }
+
         private async void InitializeImageContainers(string workingDirectory, bool isRecursive = false)
         {
             try
             {
-                var files = new List<string>();
                 SetControlMode(false);
+                var files = new List<string>();
                 mIsRecursive = isRecursive;
                 mWorkingDirectory = workingDirectory;
                 string trimdir = workingDirectory.TrimEnd('\\') + "\\";
@@ -695,8 +718,8 @@ namespace CropMaster
 
         private void UpdateImageContainers(string currentFilePath, Dictionary<string, ImageContainer> xmlImages)
         {
-            string trimdir = mWorkingDirectory.TrimEnd('\\') + "\\";
             List<string> files = new List<string>();
+            string trimdir = mWorkingDirectory.TrimEnd('\\') + "\\";
             if (mIsRecursive)
                 GetFilesRecursive(mWorkingDirectory, mAvailableFormats, files);
             else
@@ -979,8 +1002,8 @@ namespace CropMaster
         private void SetControlMode(bool flag)
         {
             MappingRectangle.Enabled = flag;
-            Open_ToolStripMenuItem.Enabled = flag;
-            OpenRecursive_ToolStripMenuItem.Enabled = flag;
+            OpenFolder_ToolStripMenuItem.Enabled = flag;
+            OpenFolderRecursive_ToolStripMenuItem.Enabled = flag;
             ExportCrop_ToolStripMenuItem.Enabled = flag;
             ExportFill_ToolStripMenuItem.Enabled = flag;
             ExportImglab_ToolStripMenuItem.Enabled = flag;

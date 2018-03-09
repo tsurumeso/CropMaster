@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -229,7 +230,23 @@ namespace CropMaster
             pictureBox1.Focus();
         }
 
-        private void Open_ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenFile_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "画像ファイル (.jpg, .jpeg, .png, .bmp, .gif, .tif, .tiff)|*.jpg;*.jpeg;*.png;*.bmp;*.gif;*.tif;*.tiff;";
+            ofd.Title = "開くファイルを選択してください";
+            // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
+            ofd.RestoreDirectory = true;
+            // 存在しないファイルの名前が指定されたとき警告を表示する
+            ofd.CheckFileExists = true;
+            // 存在しないパスが指定されたとき警告を表示する
+            ofd.CheckPathExists = true;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+                InitializeImageContainers(ofd.FileName);
+        }
+
+        private void OpenFolder_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveXml_ToolStripMenuItem.Text = mXmlSaveString;
             SaveAsXml_ToolStripMenuItem.Text = mXmlSaveAsString;
@@ -237,11 +254,11 @@ namespace CropMaster
             if (dr == System.Windows.Forms.DialogResult.OK)
             {
                 mXmlFilePath = null;
-                InitializeImageContainers(folderBrowserDialog1.SelectedPath);
+                InitializeImageContainers(folderBrowserDialog1.SelectedPath, false);
             }
         }
 
-        private void OpenRecursive_ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenFolderRecursive_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveXml_ToolStripMenuItem.Text = mXmlSaveString;
             SaveAsXml_ToolStripMenuItem.Text = mXmlSaveAsString;
@@ -578,10 +595,15 @@ namespace CropMaster
                 SaveXml_ToolStripMenuItem.Text = String.Format("{0} の保存(&S)", Path.GetFileName(path));
                 SaveAsXml_ToolStripMenuItem.Text = String.Format("名前を付けて {0} を保存(&A)", Path.GetFileName(path));
             }
-            else if (Directory.Exists(path))
+            else if (mAvailableFormats.Contains(Path.GetExtension(path).ToLower()))
             {
                 mXmlFilePath = null;
                 InitializeImageContainers(path);
+            }
+            else if (Directory.Exists(path))
+            {
+                mXmlFilePath = null;
+                InitializeImageContainers(path, false);
             }
         }
 
@@ -658,7 +680,7 @@ namespace CropMaster
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.FileName = "output.xml";
-            ofd.Filter = "XML ファイル(*.xml)|*.xml";
+            ofd.Filter = "XML ファイル (*.xml)|*.xml";
             ofd.Title = "開くファイルを選択してください";
             // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
             ofd.RestoreDirectory = true;
@@ -684,7 +706,7 @@ namespace CropMaster
             {
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.FileName = "output.xml";
-                sfd.Filter = "XML ファイル(*.xml)|*.xml";
+                sfd.Filter = "XML ファイル (*.xml)|*.xml";
                 sfd.Title = "保存先のファイルを選択してください";
                 // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
                 sfd.RestoreDirectory = true;
@@ -707,7 +729,7 @@ namespace CropMaster
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.FileName = "output.xml";
-            sfd.Filter = "XML ファイル(*.xml)|*.xml";
+            sfd.Filter = "XML ファイル (*.xml)|*.xml";
             sfd.Title = "保存先のファイルを選択してください";
             // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
             sfd.RestoreDirectory = true;
@@ -729,7 +751,7 @@ namespace CropMaster
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.FileName = "output.xml";
-            sfd.Filter = "XML ファイル(*.xml)|*.xml";
+            sfd.Filter = "XML ファイル (*.xml)|*.xml";
             sfd.Title = "保存先のファイルを選択してください";
             // ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
             sfd.RestoreDirectory = true;
