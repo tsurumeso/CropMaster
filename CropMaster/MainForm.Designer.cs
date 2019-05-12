@@ -58,18 +58,18 @@
             this.編集EToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteAll_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.表示VToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.EnabledDrawRect = new System.Windows.Forms.ToolStripMenuItem();
-            this.EnabledRectEditorForm = new System.Windows.Forms.ToolStripMenuItem();
+            this.EnabledDrawBbox = new System.Windows.Forms.ToolStripMenuItem();
+            this.EnabledBboxEditorForm = new System.Windows.Forms.ToolStripMenuItem();
             this.EnabledFillBox_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.EnabledCheckerBoard_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ツールTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RandomCrop_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RandomCropThis_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RandomCropAll_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.OutRectangle_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.OverBbox_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.EnabledAdjust = new System.Windows.Forms.ToolStripMenuItem();
             this.EnabledPadding = new System.Windows.Forms.ToolStripMenuItem();
-            this.MappingRectangle = new System.Windows.Forms.ToolStripMenuItem();
+            this.MappingBbox = new System.Windows.Forms.ToolStripMenuItem();
             this.EnabledSelectionMove = new System.Windows.Forms.ToolStripMenuItem();
             this.SelectColor_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ヘルプHToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -198,38 +198,38 @@
             // OpenFile_ToolStripMenuItem
             // 
             this.OpenFile_ToolStripMenuItem.Name = "OpenFile_ToolStripMenuItem";
-            this.OpenFile_ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.OpenFile_ToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.OpenFile_ToolStripMenuItem.Text = "ファイル(&F)...";
             this.OpenFile_ToolStripMenuItem.Click += new System.EventHandler(this.OpenFile_ToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(155, 6);
             // 
             // OpenFolder_ToolStripMenuItem
             // 
             this.OpenFolder_ToolStripMenuItem.Name = "OpenFolder_ToolStripMenuItem";
-            this.OpenFolder_ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.OpenFolder_ToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.OpenFolder_ToolStripMenuItem.Text = "フォルダ(&D)...";
             this.OpenFolder_ToolStripMenuItem.Click += new System.EventHandler(this.OpenFolder_ToolStripMenuItem_Click);
             // 
             // OpenFolderRecursive_ToolStripMenuItem
             // 
             this.OpenFolderRecursive_ToolStripMenuItem.Name = "OpenFolderRecursive_ToolStripMenuItem";
-            this.OpenFolderRecursive_ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.OpenFolderRecursive_ToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.OpenFolderRecursive_ToolStripMenuItem.Text = "フォルダ以下(&A)...";
             this.OpenFolderRecursive_ToolStripMenuItem.Click += new System.EventHandler(this.OpenFolderRecursive_ToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(155, 6);
             // 
             // LoadXml_ToolStripMenuItem
             // 
             this.LoadXml_ToolStripMenuItem.Name = "LoadXml_ToolStripMenuItem";
-            this.LoadXml_ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.LoadXml_ToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.LoadXml_ToolStripMenuItem.Text = "XML(&X)...";
             this.LoadXml_ToolStripMenuItem.Click += new System.EventHandler(this.LoadXml_ToolStripMenuItem_Click);
             // 
@@ -340,43 +340,43 @@
             // 表示VToolStripMenuItem
             // 
             this.表示VToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.EnabledDrawRect,
-            this.EnabledRectEditorForm,
+            this.EnabledDrawBbox,
+            this.EnabledBboxEditorForm,
             this.EnabledFillBox_ToolStripMenuItem,
             this.EnabledCheckerBoard_ToolStripMenuItem});
             this.表示VToolStripMenuItem.Name = "表示VToolStripMenuItem";
             this.表示VToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
             this.表示VToolStripMenuItem.Text = "表示(&V)";
             // 
-            // EnabledDrawRect
+            // EnabledDrawBbox
             // 
-            this.EnabledDrawRect.Checked = true;
-            this.EnabledDrawRect.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.EnabledDrawRect.Name = "EnabledDrawRect";
-            this.EnabledDrawRect.Size = new System.Drawing.Size(156, 22);
-            this.EnabledDrawRect.Text = "選択領域";
-            this.EnabledDrawRect.Click += new System.EventHandler(this.EnabledDrawRect_Click);
+            this.EnabledDrawBbox.Checked = true;
+            this.EnabledDrawBbox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.EnabledDrawBbox.Name = "EnabledDrawBbox";
+            this.EnabledDrawBbox.Size = new System.Drawing.Size(180, 22);
+            this.EnabledDrawBbox.Text = "選択領域";
+            this.EnabledDrawBbox.Click += new System.EventHandler(this.EnabledDrawBbox_Click);
             // 
-            // EnabledRectEditorForm
+            // EnabledBboxEditorForm
             // 
-            this.EnabledRectEditorForm.Checked = true;
-            this.EnabledRectEditorForm.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.EnabledRectEditorForm.Name = "EnabledRectEditorForm";
-            this.EnabledRectEditorForm.Size = new System.Drawing.Size(156, 22);
-            this.EnabledRectEditorForm.Text = "選択領域の編集";
-            this.EnabledRectEditorForm.Click += new System.EventHandler(this.EnabledRectEditorForm_Click);
+            this.EnabledBboxEditorForm.Checked = true;
+            this.EnabledBboxEditorForm.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.EnabledBboxEditorForm.Name = "EnabledBboxEditorForm";
+            this.EnabledBboxEditorForm.Size = new System.Drawing.Size(180, 22);
+            this.EnabledBboxEditorForm.Text = "選択領域の編集";
+            this.EnabledBboxEditorForm.Click += new System.EventHandler(this.EnabledBboxEditorForm_Click);
             // 
             // EnabledFillBox_ToolStripMenuItem
             // 
             this.EnabledFillBox_ToolStripMenuItem.Name = "EnabledFillBox_ToolStripMenuItem";
-            this.EnabledFillBox_ToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.EnabledFillBox_ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.EnabledFillBox_ToolStripMenuItem.Text = "画面に合わせる";
             this.EnabledFillBox_ToolStripMenuItem.Click += new System.EventHandler(this.EnabledFillBox_ToolStripMenuItem_Click);
             // 
             // EnabledCheckerBoard_ToolStripMenuItem
             // 
             this.EnabledCheckerBoard_ToolStripMenuItem.Name = "EnabledCheckerBoard_ToolStripMenuItem";
-            this.EnabledCheckerBoard_ToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.EnabledCheckerBoard_ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.EnabledCheckerBoard_ToolStripMenuItem.Text = "チェッカーボード";
             this.EnabledCheckerBoard_ToolStripMenuItem.Click += new System.EventHandler(this.EnabledCheckerBoard_ToolStripMenuItem_Click);
             // 
@@ -384,8 +384,8 @@
             // 
             this.ツールTToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.RandomCrop_ToolStripMenuItem,
-            this.OutRectangle_ToolStripMenuItem,
-            this.MappingRectangle,
+            this.OverBbox_ToolStripMenuItem,
+            this.MappingBbox,
             this.EnabledSelectionMove,
             this.SelectColor_ToolStripMenuItem});
             this.ツールTToolStripMenuItem.Name = "ツールTToolStripMenuItem";
@@ -415,37 +415,37 @@
             this.RandomCropAll_ToolStripMenuItem.Text = "すべての画像に適用";
             this.RandomCropAll_ToolStripMenuItem.Click += new System.EventHandler(this.RandomCropAll_ToolStripMenuItem_Click);
             // 
-            // OutRectangle_ToolStripMenuItem
+            // OverBbox_ToolStripMenuItem
             // 
-            this.OutRectangle_ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.OverBbox_ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.EnabledAdjust,
             this.EnabledPadding});
-            this.OutRectangle_ToolStripMenuItem.Name = "OutRectangle_ToolStripMenuItem";
-            this.OutRectangle_ToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
-            this.OutRectangle_ToolStripMenuItem.Text = "はみ出した領域の処理";
+            this.OverBbox_ToolStripMenuItem.Name = "OverBbox_ToolStripMenuItem";
+            this.OverBbox_ToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.OverBbox_ToolStripMenuItem.Text = "はみ出した領域の処理";
             // 
             // EnabledAdjust
             // 
             this.EnabledAdjust.Checked = true;
             this.EnabledAdjust.CheckState = System.Windows.Forms.CheckState.Checked;
             this.EnabledAdjust.Name = "EnabledAdjust";
-            this.EnabledAdjust.Size = new System.Drawing.Size(122, 22);
+            this.EnabledAdjust.Size = new System.Drawing.Size(180, 22);
             this.EnabledAdjust.Text = "位置補正";
             this.EnabledAdjust.Click += new System.EventHandler(this.EnabledAdjust_Click);
             // 
             // EnabledPadding
             // 
             this.EnabledPadding.Name = "EnabledPadding";
-            this.EnabledPadding.Size = new System.Drawing.Size(122, 22);
+            this.EnabledPadding.Size = new System.Drawing.Size(180, 22);
             this.EnabledPadding.Text = "パディング";
             this.EnabledPadding.Click += new System.EventHandler(this.EnabledPadding_Click);
             // 
-            // MappingRectangle
+            // MappingBbox
             // 
-            this.MappingRectangle.Name = "MappingRectangle";
-            this.MappingRectangle.Size = new System.Drawing.Size(224, 22);
-            this.MappingRectangle.Text = "選択領域を以降の画像へコピー";
-            this.MappingRectangle.Click += new System.EventHandler(this.MappingRectangle_Click);
+            this.MappingBbox.Name = "MappingBbox";
+            this.MappingBbox.Size = new System.Drawing.Size(224, 22);
+            this.MappingBbox.Text = "選択領域を以降の画像へコピー";
+            this.MappingBbox.Click += new System.EventHandler(this.MappingBbox_Click);
             // 
             // EnabledSelectionMove
             // 
@@ -961,12 +961,12 @@
         private System.Windows.Forms.ToolStripMenuItem SelectColor_ToolStripMenuItem;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.ToolStripMenuItem 表示VToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem EnabledRectEditorForm;
+        private System.Windows.Forms.ToolStripMenuItem EnabledBboxEditorForm;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.ToolStripMenuItem EnabledDrawRect;
-        private System.Windows.Forms.ToolStripMenuItem MappingRectangle;
-        private System.Windows.Forms.ToolStripMenuItem OutRectangle_ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem EnabledDrawBbox;
+        private System.Windows.Forms.ToolStripMenuItem MappingBbox;
+        private System.Windows.Forms.ToolStripMenuItem OverBbox_ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem EnabledAdjust;
         private System.Windows.Forms.ToolStripMenuItem EnabledPadding;
         private System.Windows.Forms.ToolStripMenuItem EnabledSelectionMove;

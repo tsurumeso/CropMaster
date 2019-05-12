@@ -17,16 +17,16 @@ namespace CropMaster
         const string mXmlSaveAsString = "XML 形式で名前を付けて保存(&A)";
         bool mIsRecursive = false;
         bool mIsDrawing = false;
-        int mMovingRectIndex = -1;
+        int mMovingBboxIndex = -1;
         int mCurrentImageIndex = -1;
-        int mCurrentRectIndex = -1;
-        int mOldOnRectIndex = -1;
+        int mCurrentBboxIndex = -1;
+        int mOldOnBboxIndex = -1;
         int mFixedWidth = 256, mFixedHeight = 256;
-        AspectRatioType mAspectRatioType = AspectRatioType.Squared;
+        AspectRatioType mAspectRatioType = AspectRatioType.Square;
 
         Graphics mDrawer;
         Point mMouseDown = new Point();
-        RectEditorForm mRectEditorForm;
+        BboxEditorForm mBboxEditorForm;
         List<ImageContainer> mBaseImages = new List<ImageContainer>();
         Color mColor = Color.Red;
         Color mReverseColor
@@ -41,7 +41,7 @@ namespace CropMaster
         {
             InitializeComponent();
             InitializeControlMode(false);
-            ShowRectEditorForm();
+            ShowBboxEditorForm();
 
             toolStripComboBox1.SelectedIndex = 0;
             mFixedWidth = (int)toolStripNumericUpDown1.Value;
@@ -51,14 +51,14 @@ namespace CropMaster
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             mMouseDown = new Point(e.X, e.Y);
-            if (pictureBox1.Image == null || !EnabledDrawRect.Checked)
+            if (pictureBox1.Image == null || !EnabledDrawBbox.Checked)
                 return;
 
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    mMovingRectIndex = SearchRectangle(mMouseDown);
-                    if (mMovingRectIndex == -1)
+                    mMovingBboxIndex = SearchBbox(mMouseDown);
+                    if (mMovingBboxIndex == -1)
                     {
                         // カーソルをデフォルトからクロスに
                         this.pictureBox1.Cursor = Cursors.Cross;
@@ -71,7 +71,7 @@ namespace CropMaster
         private async void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
             Point mouseCurrent = new Point(e.X, e.Y);
-            if (pictureBox1.Image == null || !EnabledDrawRect.Checked)
+            if (pictureBox1.Image == null || !EnabledDrawBbox.Checked)
                 return;
 
             switch (e.Button)
@@ -81,7 +81,7 @@ namespace CropMaster
                     {
                         // カーソルをクロスからデフォルトに
                         this.pictureBox1.Cursor = Cursors.Default;
-                        AddRectangle(mMouseDown, mouseCurrent);
+                        AddBbox(mMouseDown, mouseCurrent);
 
                         if (EnabledSelectionMove.Checked)
                         {
@@ -90,19 +90,19 @@ namespace CropMaster
                         }
                         mIsDrawing = false;
                     }
-                    else if (mMovingRectIndex != -1)
+                    else if (mMovingBboxIndex != -1)
                     {
-                        Rectangle rect = mBaseImages[mCurrentImageIndex].Rectangles[mMovingRectIndex];
-                        MoveRectangleOnImage(mMouseDown, mouseCurrent, rect);
-                        mCurrentRectIndex = mMovingRectIndex;
-                        mMovingRectIndex = -1;
+                        Rectangle bbox = mBaseImages[mCurrentImageIndex].Bboxs[mMovingBboxIndex];
+                        MoveBboxOnImage(mMouseDown, mouseCurrent, bbox);
+                        mCurrentBboxIndex = mMovingBboxIndex;
+                        mMovingBboxIndex = -1;
                         // 移動した領域上にカーソルがなかったことにする <- 補色で描くため
-                        mOldOnRectIndex = -1;
+                        mOldOnBboxIndex = -1;
                     }
                     break;
                 case MouseButtons.Right:
-                    if (mMovingRectIndex == -1)
-                        RemoveRectangle(SearchRectangle(mouseCurrent));
+                    if (mMovingBboxIndex == -1)
+                        RemoveBbox(SearchBbox(mouseCurrent));
                     break;
             }
         }
@@ -110,7 +110,7 @@ namespace CropMaster
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
             Point mouseCurrent = new Point(e.X, e.Y);
-            if (pictureBox1.Image == null || !EnabledDrawRect.Checked)
+            if (pictureBox1.Image == null || !EnabledDrawBbox.Checked)
                 return;
 
             switch (e.Button)
@@ -118,36 +118,36 @@ namespace CropMaster
                 case MouseButtons.Left:
                     // 描画フラグチェック
                     if (mIsDrawing)
-                        DrawDashStyleRectangle(mMouseDown, mouseCurrent, mColor);
-                    else if (mMovingRectIndex != -1)
+                        DrawDashStyleBbox(mMouseDown, mouseCurrent, mColor);
+                    else if (mMovingBboxIndex != -1)
                     {
-                        Rectangle rect = mBaseImages[mCurrentImageIndex].Rectangles[mMovingRectIndex];
-                        rect = MoveRectangle(mMouseDown, mouseCurrent, rect);
-                        DrawDashStyleRectangle(rect, mReverseColor);
+                        Rectangle bbox = mBaseImages[mCurrentImageIndex].Bboxs[mMovingBboxIndex];
+                        bbox = MoveBbox(mMouseDown, mouseCurrent, bbox);
+                        DrawDashStyleBbox(bbox, mReverseColor);
                     }
                     return;
             }
             try
             {
-                int onRectIndex = SearchRectangle(mouseCurrent);
-                if (mOldOnRectIndex != onRectIndex)
+                int onBboxIndex = SearchBbox(mouseCurrent);
+                if (mOldOnBboxIndex != onBboxIndex)
                 {
-                    if (onRectIndex >= 0)
+                    if (onBboxIndex >= 0)
                     {
                         this.pictureBox1.Cursor = Cursors.Hand;
-                        UpdateRectangles(new int[] { onRectIndex });
+                        UpdateBboxs(new int[] { onBboxIndex });
                     }
                     else
                     {
                         this.pictureBox1.Cursor = Cursors.Default;
-                        UpdateRectangles();
+                        UpdateBboxs();
                     }
-                    mOldOnRectIndex = onRectIndex;
+                    mOldOnBboxIndex = onBboxIndex;
                 }
             }
             catch
             {
-                mOldOnRectIndex = -1;
+                mOldOnBboxIndex = -1;
                 this.pictureBox1.Cursor = Cursors.Default;
             }
         }
@@ -167,12 +167,12 @@ namespace CropMaster
 
         private void button5_Click(object sender, EventArgs e)
         {
-            NextImageWithRect(true);
+            NextImageWithBbox(true);
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            PrevImageWithRect(true);
+            PrevImageWithBbox(true);
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -192,7 +192,7 @@ namespace CropMaster
 
             for (int i = mCurrentImageIndex - 1; i >= 0; i--)
             {
-                if (mBaseImages[i].Rectangles.Count == 0)
+                if (mBaseImages[i].Bboxs.Count == 0)
                 {
                     mCurrentImageIndex = i;
                     trackBar1.Value = i + 1;
@@ -200,9 +200,9 @@ namespace CropMaster
                 }
             }
             UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
-            UpdateRectangles();
-            UpdateRectListView();
-            UpdateRectEditorForm(0);
+            UpdateBboxs();
+            UpdateBboxListView();
+            UpdateBboxEditorForm(0);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -212,7 +212,7 @@ namespace CropMaster
 
             for (int i = mCurrentImageIndex + 1; i < mBaseImages.Count; i++)
             {
-                if (mBaseImages[i].Rectangles.Count == 0)
+                if (mBaseImages[i].Bboxs.Count == 0)
                 {
                     mCurrentImageIndex = i;
                     trackBar1.Value = i + 1;
@@ -220,9 +220,9 @@ namespace CropMaster
                 }
             }
             UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
-            UpdateRectangles();
-            UpdateRectListView();
-            UpdateRectEditorForm(0);
+            UpdateBboxs();
+            UpdateBboxListView();
+            UpdateBboxEditorForm(0);
         }
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
@@ -278,9 +278,9 @@ namespace CropMaster
             int idx = trackBar1.Value - 1;
             mCurrentImageIndex = idx;
             UpdatePictureBox(mBaseImages[idx].Path);
-            UpdateRectangles();
-            UpdateRectListView();
-            UpdateRectEditorForm();
+            UpdateBboxs();
+            UpdateBboxListView();
+            UpdateBboxEditorForm();
         }
 
         private void About_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -325,8 +325,8 @@ namespace CropMaster
         {
             if (listView1.SelectedItems.Count > 0)
             {
-                mCurrentRectIndex = listView1.SelectedItems[0].Index;
-                UpdateRectEditorForm(listView1.SelectedItems[0].Index);           
+                mCurrentBboxIndex = listView1.SelectedItems[0].Index;
+                UpdateBboxEditorForm(listView1.SelectedItems[0].Index);           
             }
         }
 
@@ -336,9 +336,9 @@ namespace CropMaster
             {
                 var lvi = listView1.GetItemAt(e.X, e.Y);
                 if (lvi.Selected)
-                    UpdateRectangles(new int[] { lvi.Index });
+                    UpdateBboxs(new int[] { lvi.Index });
                 else
-                    UpdateRectangles();
+                    UpdateBboxs();
             }
         }
 
@@ -360,38 +360,38 @@ namespace CropMaster
             {
                 mColor = cd.Color;
                 if (mBaseImages.Count > 0)
-                    UpdateRectangles();
+                    UpdateBboxs();
             }
         }
 
-        private void RectEditorForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void BboxEditorForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            EnabledRectEditorForm.Checked = false;
+            EnabledBboxEditorForm.Checked = false;
         }
 
-        private void EnabledRectEditorForm_Click(object sender, EventArgs e)
+        private void EnabledBboxEditorForm_Click(object sender, EventArgs e)
         {
-            EnabledRectEditorForm.Checked = !EnabledRectEditorForm.Checked;
-            if (EnabledRectEditorForm.Checked && mRectEditorForm.IsDisposed)
+            EnabledBboxEditorForm.Checked = !EnabledBboxEditorForm.Checked;
+            if (EnabledBboxEditorForm.Checked && mBboxEditorForm.IsDisposed)
             {
-                ShowRectEditorForm();
+                ShowBboxEditorForm();
                 if (mBaseImages.Count > 0)
                 {
-                    UpdateRectListView();
-                    UpdateRectEditorForm();
+                    UpdateBboxListView();
+                    UpdateBboxEditorForm();
                 }
             }
-            else if (!mRectEditorForm.IsDisposed)
+            else if (!mBboxEditorForm.IsDisposed)
             {
-                mRectEditorForm.Dispose();
+                mBboxEditorForm.Dispose();
             }
         }
 
-        private void EnabledDrawRect_Click(object sender, EventArgs e)
+        private void EnabledDrawBbox_Click(object sender, EventArgs e)
         {
-            EnabledDrawRect.Checked = !EnabledDrawRect.Checked;
+            EnabledDrawBbox.Checked = !EnabledDrawBbox.Checked;
             if (mBaseImages.Count > 0)
-                UpdateRectangles();
+                UpdateBboxs();
         }
 
         private void EnabledSelectionMove_Click(object sender, EventArgs e)
@@ -399,17 +399,17 @@ namespace CropMaster
             EnabledSelectionMove.Checked = !EnabledSelectionMove.Checked;
         }
 
-        private void MappingRectangle_Click(object sender, EventArgs e)
+        private void MappingBbox_Click(object sender, EventArgs e)
         {
             DialogResult res = MessageBox.Show("選択中の領域を以降の画像にコピーします\nよろしいですか？", "確認",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
 
-            int idx = mCurrentRectIndex;
-            if (idx < 0) idx = mBaseImages[mCurrentImageIndex].Rectangles.Count - 1;
-            if (idx >= 0 && idx < mBaseImages[mCurrentImageIndex].Rectangles.Count)
+            int idx = mCurrentBboxIndex;
+            if (idx < 0) idx = mBaseImages[mCurrentImageIndex].Bboxs.Count - 1;
+            if (idx >= 0 && idx < mBaseImages[mCurrentImageIndex].Bboxs.Count)
             {
                 if (res == DialogResult.Yes)
-                    CopyRectanglesForward(mBaseImages[mCurrentImageIndex].Rectangles[idx]);
+                    CopyBboxsForward(mBaseImages[mCurrentImageIndex].Bboxs[idx]);
                 else if (res == DialogResult.No) { }
             }
         }
@@ -524,10 +524,10 @@ namespace CropMaster
             if (listView1.SelectedItems.Count > 0)
             {
                 for (int i = listView1.SelectedItems.Count - 1; i >= 0; i--)
-                    mBaseImages[mCurrentImageIndex].Rectangles.RemoveAt(listView1.SelectedItems[i].Index);
-                UpdateRectListView();
-                UpdateRectEditorForm();
-                UpdateRectangles();
+                    mBaseImages[mCurrentImageIndex].Bboxs.RemoveAt(listView1.SelectedItems[i].Index);
+                UpdateBboxListView();
+                UpdateBboxEditorForm();
+                UpdateBboxs();
             }
         }
 
@@ -660,11 +660,11 @@ namespace CropMaster
         {
             foreach (ImageContainer baseImage in mBaseImages)
             {
-                if (baseImage.Rectangles != null)
-                    baseImage.Rectangles.Clear();
+                if (baseImage.Bboxs != null)
+                    baseImage.Bboxs.Clear();
             }
-            UpdateRectangles();
-            UpdateRectListView(false);
+            UpdateBboxs();
+            UpdateBboxListView(false);
         }
 
         private void SelectAll_ToolStripMenuItem_Click(object sender, EventArgs e)

@@ -7,6 +7,6 @@ namespace CropMaster
     {
         public string Path;
         public string FileName;
-        public List<Rectangle> Rectangles;
+        public List<Rectangle> Bboxs;
     }
 }

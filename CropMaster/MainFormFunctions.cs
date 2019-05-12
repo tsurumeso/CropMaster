@@ -21,11 +21,11 @@ namespace CropMaster
         const int mAlpha = 128;
 
         Bitmap mBackgroundImage;
-        Rectangle mOldRect = new Rectangle(0, 0, 0, 0);
+        Rectangle mOldBbox = new Rectangle(0, 0, 0, 0);
         RandomNumberGenerator mRandGen = RandomNumberGenerator.Create();
 
         delegate void UpdateScaleAndPadDelegate(string path);
-        delegate void AdjustRectangleToImageDelegate(ref Rectangle rect);
+        delegate void AdjustBboxToImageDelegate(ref Rectangle bbox);
 
         private Point GetStartPoint(Point p1, Point p2)
         {
@@ -35,19 +35,19 @@ namespace CropMaster
             return p;
         }
 
-        private Rectangle GetRectangle(Point mouseDown, Point mouseCurrent)
+        private Rectangle GetBbox(Point mouseDown, Point mouseCurrent)
         {
-            if (mAspectRatioType == AspectRatioType.Squared)
-                return GetSquaredRectangle(mouseDown, mouseCurrent);
+            if (mAspectRatioType == AspectRatioType.Square)
+                return GetSquareBbox(mouseDown, mouseCurrent);
             else if (mAspectRatioType == AspectRatioType.Fixed)
-                return GetFixedRectangle(mouseCurrent);
+                return GetFixedBbox(mouseCurrent);
             else if (mAspectRatioType == AspectRatioType.Free)
-                return GetFreeRatioRectangle(mouseDown, mouseCurrent);
+                return GetFreeRatioBbox(mouseDown, mouseCurrent);
 
             return new Rectangle(0, 0, 0, 0);
         }
 
-        private Rectangle GetFreeRatioRectangle(Point mouseDown, Point mouseCurrent)
+        private Rectangle GetFreeRatioBbox(Point mouseDown, Point mouseCurrent)
         {
             int startX = Math.Min(mouseCurrent.X, mouseDown.X);
             int startY = Math.Min(mouseCurrent.Y, mouseDown.Y);
@@ -57,14 +57,14 @@ namespace CropMaster
             return new Rectangle(startX, startY, endX - startX, endY - startY);
         }
 
-        private Rectangle GetFixedRectangle(Point mouseCurrent)
+        private Rectangle GetFixedBbox(Point mouseCurrent)
         {
             int width = (int)(mFixedWidth * mScale);
             int height = (int)(mFixedHeight * mScale);
             return new Rectangle(mouseCurrent.X - (int)(width / 2), mouseCurrent.Y - (int)(height / 2), width, height);
         }
 
-        private Rectangle GetSquaredRectangle(Point mouseDown, Point mouseCurrent)
+        private Rectangle GetSquareBbox(Point mouseDown, Point mouseCurrent)
         {
             Point startPoint = GetStartPoint(mouseDown, mouseCurrent);
             int dx = Math.Abs(mouseCurrent.X - mouseDown.X);
@@ -121,51 +121,51 @@ namespace CropMaster
                 mScale = 1f;
         }
 
-        private Rectangle ConvertBoxToImage(Rectangle rect)
+        private Rectangle ConvertFormBboxToImgBbox(Rectangle bbox)
         {
-            Rectangle imageRect = new Rectangle();
-            imageRect.X = (int)Math.Round((rect.X - mPadX) / mScale);
-            imageRect.Y = (int)Math.Round((rect.Y - mPadY) / mScale);
-            imageRect.Width = (int)Math.Round(rect.Width / mScale);
-            imageRect.Height = (int)Math.Round(rect.Height / mScale);
-            return imageRect;
+            Rectangle imageRectangle = new Rectangle();
+            imageRectangle.X = (int)Math.Round((bbox.X - mPadX) / mScale);
+            imageRectangle.Y = (int)Math.Round((bbox.Y - mPadY) / mScale);
+            imageRectangle.Width = (int)Math.Round(bbox.Width / mScale);
+            imageRectangle.Height = (int)Math.Round(bbox.Height / mScale);
+            return imageRectangle;
         }
 
-        private Rectangle ConvertImageToBox(Rectangle rect)
+        private Rectangle ConvertImgBboxToFormBbox(Rectangle bbox)
         {
-            Rectangle boxRect = new Rectangle();
-            boxRect.X = (int)Math.Round(rect.X * mScale) + mPadX;
-            boxRect.Y = (int)Math.Round(rect.Y * mScale) + mPadY;
-            boxRect.Width = (int)Math.Round(rect.Width * mScale);
-            boxRect.Height = (int)Math.Round(rect.Height * mScale);
-            return boxRect;
+            Rectangle boxRectangle = new Rectangle();
+            boxRectangle.X = (int)Math.Round(bbox.X * mScale) + mPadX;
+            boxRectangle.Y = (int)Math.Round(bbox.Y * mScale) + mPadY;
+            boxRectangle.Width = (int)Math.Round(bbox.Width * mScale);
+            boxRectangle.Height = (int)Math.Round(bbox.Height * mScale);
+            return boxRectangle;
         }
 
-        private Rectangle MoveRectangle(Point mouseDown, Point mouseCurrent, Rectangle rect)
+        private Rectangle MoveBbox(Point mouseDown, Point mouseCurrent, Rectangle bbox)
         {
-            Rectangle boxRect = new Rectangle();
+            Rectangle boxRectangle = new Rectangle();
             int dx = mouseCurrent.X - mouseDown.X;
             int dy = mouseCurrent.Y - mouseDown.Y;
-            boxRect.X = (int)(rect.X * mScale) + dx + mPadX;
-            boxRect.Y = (int)(rect.Y * mScale) + dy + mPadY;
-            boxRect.Width = (int)(rect.Width * mScale);
-            boxRect.Height = (int)(rect.Height * mScale);
-            return boxRect;
+            boxRectangle.X = (int)(bbox.X * mScale) + dx + mPadX;
+            boxRectangle.Y = (int)(bbox.Y * mScale) + dy + mPadY;
+            boxRectangle.Width = (int)(bbox.Width * mScale);
+            boxRectangle.Height = (int)(bbox.Height * mScale);
+            return boxRectangle;
         }
 
-        private void MoveRectangleOnImage(Point mouseDown, Point mouseCurrent, Rectangle rect)
+        private void MoveBboxOnImage(Point mouseDown, Point mouseCurrent, Rectangle bbox)
         {
             int dx = mouseCurrent.X - mouseDown.X;
             int dy = mouseCurrent.Y - mouseDown.Y;
-            rect.X = (int)(rect.X + dx / mScale);
-            rect.Y = (int)(rect.Y + dy / mScale);
+            bbox.X = (int)(bbox.X + dx / mScale);
+            bbox.Y = (int)(bbox.Y + dy / mScale);
 
-            AdjustRectangle(ref rect);
-            mBaseImages[mCurrentImageIndex].Rectangles[mMovingRectIndex] = rect;
+            AdjustBbox(ref bbox);
+            mBaseImages[mCurrentImageIndex].Bboxs[mMovingBboxIndex] = bbox;
 
-            UpdateRectListView();
-            UpdateRectEditorForm(mMovingRectIndex);
-            UpdateRectangles(new int[] { mMovingRectIndex });
+            UpdateBboxListView();
+            UpdateBboxEditorForm(mMovingBboxIndex);
+            UpdateBboxs(new int[] { mMovingBboxIndex });
         }
 
         private bool ReloadPictureBox()
@@ -178,107 +178,107 @@ namespace CropMaster
             return true;
         }
 
-        private void UpdateRectangles(int[] highlightIndices = null)
+        private void UpdateBboxs(int[] highlightIndices = null)
         {
             if (!ReloadPictureBox())
                 return;
 
-            if (mBaseImages[mCurrentImageIndex].Rectangles.Count() != 0 && EnabledDrawRect.Checked)
+            if (mBaseImages[mCurrentImageIndex].Bboxs.Count() != 0 && EnabledDrawBbox.Checked)
             {
                 using (SolidBrush alphaBrush = new SolidBrush(Color.FromArgb(mAlpha, mColor)))
                 using (SolidBrush reverseBrush = new SolidBrush(Color.FromArgb(mAlpha, mReverseColor)))
                 using (Pen reversePen = new Pen(mReverseColor))
                 {
                     reversePen.DashStyle = DashStyle.Dash;
-                    for (int i = 0; i < mBaseImages[mCurrentImageIndex].Rectangles.Count; i++)
+                    for (int i = 0; i < mBaseImages[mCurrentImageIndex].Bboxs.Count; i++)
                     {
-                        var rect = mBaseImages[mCurrentImageIndex].Rectangles[i];
+                        var bbox = mBaseImages[mCurrentImageIndex].Bboxs[i];
                         if (highlightIndices != null && highlightIndices.Contains(i))
                         {
-                            var frameRect = new Rectangle(rect.X - 1, rect.Y - 1, rect.Width + 1, rect.Height + 1);
-                            mDrawer.DrawRectangle(reversePen, frameRect);
-                            mDrawer.FillRectangle(reverseBrush, rect);
+                            var frameBbox = new Rectangle(bbox.X - 1, bbox.Y - 1, bbox.Width + 1, bbox.Height + 1);
+                            mDrawer.DrawRectangle(reversePen, frameBbox);
+                            mDrawer.FillRectangle(reverseBrush, bbox);
                         }
                         else
-                            mDrawer.FillRectangle(alphaBrush, rect);
+                            mDrawer.FillRectangle(alphaBrush, bbox);
                     }
                 }
             }
             pictureBox1.Refresh();
         }
 
-        private void DrawDashStyleRectangle(Point mouseDown, Point mouseCurrent, Color color)
+        private void DrawDashStyleBbox(Point mouseDown, Point mouseCurrent, Color color)
         {
-            Rectangle rect = GetRectangle(mouseDown, mouseCurrent);
-            DrawDashStyleRectangle(rect, color);
+            Rectangle bbox = GetBbox(mouseDown, mouseCurrent);
+            DrawDashStyleBbox(bbox, color);
         }
 
-        private void DrawDashStyleRectangle(Rectangle rect, Color color)
+        private void DrawDashStyleBbox(Rectangle bbox, Color color)
         {
-            if (!mOldRect.IsEmpty)
+            if (!mOldBbox.IsEmpty)
             {
-                mOldRect.Inflate(2, 2);
-                pictureBox1.Invalidate(mOldRect);
+                mOldBbox.Inflate(2, 2);
+                pictureBox1.Invalidate(mOldBbox);
                 pictureBox1.Update();
             }
             using (var dst = pictureBox1.CreateGraphics())
             using (var colorPen = new Pen(color))
             {
                 colorPen.DashStyle = DashStyle.Dash;
-                dst.DrawRectangle(colorPen, rect);
-                mOldRect = rect;
+                dst.DrawRectangle(colorPen, bbox);
+                mOldBbox = bbox;
             }
         }
 
-        private void AdjustRectangle(ref Rectangle rect)
+        private void AdjustBbox(ref Rectangle bbox)
         {
             if (EnabledAdjust.Checked)
             {
-                if (rect.Width > pictureBox1.Image.Size.Width)
-                    rect.Width = pictureBox1.Image.Size.Width;
-                if (rect.Height > pictureBox1.Image.Size.Height)
-                    rect.Height = pictureBox1.Image.Size.Height;
-                if (rect.X < 0)
-                    rect.X = 0;
-                else if (rect.X + rect.Width > pictureBox1.Image.Size.Width)
-                    rect.X = pictureBox1.Image.Size.Width - rect.Width;
-                if (rect.Y < 0)
-                    rect.Y = 0;
-                else if (rect.Y + rect.Height > pictureBox1.Image.Size.Height)
-                    rect.Y = pictureBox1.Image.Size.Height - rect.Height;
+                if (bbox.Width > pictureBox1.Image.Size.Width)
+                    bbox.Width = pictureBox1.Image.Size.Width;
+                if (bbox.Height > pictureBox1.Image.Size.Height)
+                    bbox.Height = pictureBox1.Image.Size.Height;
+                if (bbox.X < 0)
+                    bbox.X = 0;
+                else if (bbox.X + bbox.Width > pictureBox1.Image.Size.Width)
+                    bbox.X = pictureBox1.Image.Size.Width - bbox.Width;
+                if (bbox.Y < 0)
+                    bbox.Y = 0;
+                else if (bbox.Y + bbox.Height > pictureBox1.Image.Size.Height)
+                    bbox.Y = pictureBox1.Image.Size.Height - bbox.Height;
             }
         }
 
-        private void AddRectangle(Point mouseDown, Point mouseCurrent)
+        private void AddBbox(Point mouseDown, Point mouseCurrent)
         {
-            Rectangle rect = GetRectangle(mouseDown, mouseCurrent);
-            Rectangle imageRect = ConvertBoxToImage(rect);
+            Rectangle bbox = GetBbox(mouseDown, mouseCurrent);
+            Rectangle imageBbox = ConvertFormBboxToImgBbox(bbox);
 
-            if (imageRect.Width > 10 && imageRect.Height > 10)
+            if (imageBbox.Width > 10 && imageBbox.Height > 10)
             {
-                AdjustRectangle(ref imageRect);
+                AdjustBbox(ref imageBbox);
                 if (mAspectRatioType == AspectRatioType.Fixed)
                 {
-                    imageRect.Width = mFixedWidth;
-                    imageRect.Height = mFixedHeight;
+                    imageBbox.Width = mFixedWidth;
+                    imageBbox.Height = mFixedHeight;
                 }
-                mBaseImages[mCurrentImageIndex].Rectangles.Add(imageRect);
+                mBaseImages[mCurrentImageIndex].Bboxs.Add(imageBbox);
             }
-            UpdateRectListView();
-            UpdateRectEditorForm();
-            UpdateRectangles();
+            UpdateBboxListView();
+            UpdateBboxEditorForm();
+            UpdateBboxs();
         }
 
-        private async void CopyRectanglesForward(Rectangle rect)
+        private async void CopyBboxsForward(Rectangle bbox)
         {
             try
             {
                 SetControlMode(false);
-                Point mouseDown = new Point(rect.X, rect.Y);
-                Point mouseCurrent = new Point(rect.X + rect.Width, rect.Y + rect.Height);
-                Rectangle boxRect = ConvertImageToBox(GetRectangle(mouseDown, mouseCurrent));
+                Point mouseDown = new Point(bbox.X, bbox.Y);
+                Point mouseCurrent = new Point(bbox.X + bbox.Width, bbox.Y + bbox.Height);
+                Rectangle formBbox = ConvertImgBboxToFormBbox(GetBbox(mouseDown, mouseCurrent));
 
-                AdjustRectangleToImageDelegate adjustRectangleToImage = new AdjustRectangleToImageDelegate(AdjustRectangle);
+                AdjustBboxToImageDelegate adjustBboxToImage = new AdjustBboxToImageDelegate(AdjustBbox);
                 UpdateScaleAndPadDelegate updateScaleAndPad = new UpdateScaleAndPadDelegate(UpdateScaleAndPad);
 
                 using (var progressForm = GetProgressForm(mBaseImages.Count - mCurrentImageIndex - 1))
@@ -289,11 +289,11 @@ namespace CropMaster
                         for (int i = mCurrentImageIndex + 1; i < mBaseImages.Count; i++)
                         {
                             Invoke(updateScaleAndPad, mBaseImages[i].Path);
-                            Rectangle mappedRect = ConvertBoxToImage(boxRect);
-                            if (mappedRect.Width > 10 && mappedRect.Height > 10)
+                            Rectangle mappedBbox = ConvertFormBboxToImgBbox(formBbox);
+                            if (mappedBbox.Width > 10 && mappedBbox.Height > 10)
                             {
-                                Invoke(adjustRectangleToImage, mappedRect);
-                                mBaseImages[i].Rectangles.Add(mappedRect);
+                                Invoke(adjustBboxToImage, mappedBbox);
+                                mBaseImages[i].Bboxs.Add(mappedBbox);
                             }
                             if (progressForm.isCancelled)
                                 throw new OperationCanceledException();
@@ -313,81 +313,81 @@ namespace CropMaster
             finally
             {
                 SetControlMode(true);
-                UpdateRectListView();
-                UpdateRectEditorForm();
-                UpdateRectangles();
+                UpdateBboxListView();
+                UpdateBboxEditorForm();
+                UpdateBboxs();
             }
         }
 
-        private void RemoveRectangle(int idx)
+        private void RemoveBbox(int idx)
         {
-            if (idx >= 0 && idx <= mBaseImages[mCurrentImageIndex].Rectangles.Count)
-                mBaseImages[mCurrentImageIndex].Rectangles.RemoveAt(idx);
+            if (idx >= 0 && idx <= mBaseImages[mCurrentImageIndex].Bboxs.Count)
+                mBaseImages[mCurrentImageIndex].Bboxs.RemoveAt(idx);
 
-            if (mBaseImages[mCurrentImageIndex].Rectangles.Count == 0)
-                mRectEditorForm.InitializePictureBox();
+            if (mBaseImages[mCurrentImageIndex].Bboxs.Count == 0)
+                mBboxEditorForm.InitializePictureBox();
 
-            UpdateRectListView();
-            UpdateRectEditorForm();
-            UpdateRectangles();
+            UpdateBboxListView();
+            UpdateBboxEditorForm();
+            UpdateBboxs();
         }
 
-        private int SearchRectangle(Point p)
+        private int SearchBbox(Point p)
         {
-            for (int i = mBaseImages[mCurrentImageIndex].Rectangles.Count - 1; i >= 0; i--)
+            for (int i = mBaseImages[mCurrentImageIndex].Bboxs.Count - 1; i >= 0; i--)
             {
-                Rectangle rect = mBaseImages[mCurrentImageIndex].Rectangles[i];
-                Rectangle boxRect = ConvertImageToBox(rect);
-                if (p.X > boxRect.X && p.X < boxRect.X + boxRect.Width && 
-                    p.Y > boxRect.Y && p.Y < boxRect.Y + boxRect.Height)
+                Rectangle bbox = mBaseImages[mCurrentImageIndex].Bboxs[i];
+                Rectangle formBbox = ConvertImgBboxToFormBbox(bbox);
+                if (p.X > formBbox.X && p.X < formBbox.X + formBbox.Width && 
+                    p.Y > formBbox.Y && p.Y < formBbox.Y + formBbox.Height)
                     return i;
             }
             return -1;
         }
 
-        private void UpdateRectEditorForm(int idx = -1)
+        private void UpdateBboxEditorForm(int idx = -1)
         {
-            if (mRectEditorForm.IsDisposed)
+            if (mBboxEditorForm.IsDisposed)
                 return;
 
             if (idx < 0)
-                idx = mBaseImages[mCurrentImageIndex].Rectangles.Count - 1;
-            if (idx >= 0 && idx < mBaseImages[mCurrentImageIndex].Rectangles.Count)
+                idx = mBaseImages[mCurrentImageIndex].Bboxs.Count - 1;
+            if (idx >= 0 && idx < mBaseImages[mCurrentImageIndex].Bboxs.Count)
             {
-                Bitmap rectImage = CropImage(mBackgroundImage, mBaseImages[mCurrentImageIndex].Rectangles[idx]);
-                mRectEditorForm.UpdatePictureBox(rectImage, mBaseImages[mCurrentImageIndex].Rectangles[idx], idx);
+                Bitmap bboxImage = CropImage(mBackgroundImage, mBaseImages[mCurrentImageIndex].Bboxs[idx]);
+                mBboxEditorForm.UpdatePictureBox(bboxImage, mBaseImages[mCurrentImageIndex].Bboxs[idx], idx);
             }
             else
-                mRectEditorForm.InitializePictureBox();
+                mBboxEditorForm.InitializePictureBox();
         }
 
-        public void UpdateRectEditorForm(int idx, bool isNext)
+        public void UpdateBboxEditorForm(int idx, bool isNext)
         {
-            if (mRectEditorForm.IsDisposed || mBaseImages.Count == 0)
+            if (mBboxEditorForm.IsDisposed || mBaseImages.Count == 0)
                 return;
 
             if (isNext)
             {
-                if (idx < mBaseImages[mCurrentImageIndex].Rectangles.Count - 1 && idx >= 0)
-                    UpdateRectEditorForm(++idx);
+                if (idx < mBaseImages[mCurrentImageIndex].Bboxs.Count - 1 && idx >= 0)
+                    UpdateBboxEditorForm(++idx);
                 else
-                    NextImageWithRect(true);
+                    NextImageWithBbox(true);
             }
             else
             {
                 if (idx > 0)
-                    UpdateRectEditorForm(--idx);
+                    UpdateBboxEditorForm(--idx);
                 else
-                    PrevImageWithRect(false);
+                    PrevImageWithBbox(false);
             }
         }
 
-        private void UpdateRectListView(bool flag = true)
+        private void UpdateBboxListView(bool flag = true)
         {
             listView1.Items.Clear();
             if (flag)
             {
-                foreach (var c in mBaseImages[mCurrentImageIndex].Rectangles)
+                foreach (var c in mBaseImages[mCurrentImageIndex].Bboxs)
                 {
                     string[] r = { c.X.ToString(), c.Y.ToString(), c.Width.ToString(), c.Height.ToString() };
                     listView1.Items.Add(new ListViewItem(r));
@@ -456,16 +456,16 @@ namespace CropMaster
             }
         }
 
-        void NextImageWithRect(bool selectFirstRect)
+        void NextImageWithBbox(bool selectFirstBbox)
         {
             if (mBaseImages.Count == 0 || mCurrentImageIndex >= mBaseImages.Count)
                 return;
 
-            int initialIndex = selectFirstRect ? 0 : -1;
+            int initialIndex = selectFirstBbox ? 0 : -1;
             int oldImageIndex = mCurrentImageIndex;
             for (int i = mCurrentImageIndex + 1; i < mBaseImages.Count; i++)
             {
-                if (mBaseImages[i].Rectangles.Count != 0)
+                if (mBaseImages[i].Bboxs.Count != 0)
                 {
                     mCurrentImageIndex = i;
                     trackBar1.Value = i + 1;
@@ -475,21 +475,21 @@ namespace CropMaster
             if (oldImageIndex != mCurrentImageIndex)
             {
                 UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
-                UpdateRectangles();
-                UpdateRectListView();
-                UpdateRectEditorForm(initialIndex);
+                UpdateBboxs();
+                UpdateBboxListView();
+                UpdateBboxEditorForm(initialIndex);
             }
         }
 
-        void PrevImageWithRect(bool selectFirstRect)
+        void PrevImageWithBbox(bool selectFirstBbox)
         {
             if (mBaseImages.Count == 0 || mCurrentImageIndex <= 0)
                 return;
 
-            int initialIndex = selectFirstRect ? 0 : -1;
+            int initialIndex = selectFirstBbox ? 0 : -1;
             for (int i = mCurrentImageIndex - 1; i >= 0; i--)
             {
-                if (mBaseImages[i].Rectangles.Count != 0)
+                if (mBaseImages[i].Bboxs.Count != 0)
                 {
                     mCurrentImageIndex = i;
                     trackBar1.Value = i + 1;
@@ -497,19 +497,19 @@ namespace CropMaster
                 }
             }
             UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
-            UpdateRectangles();
-            UpdateRectListView();
-            UpdateRectEditorForm(initialIndex);
+            UpdateBboxs();
+            UpdateBboxListView();
+            UpdateBboxEditorForm(initialIndex);
         }
 
         // Bitmap.Clone()を使った方法より高速らしい?
-        private Bitmap CropImage(Bitmap src, Rectangle srcRect)
+        private Bitmap CropImage(Bitmap src, Rectangle srcBbox)
         {
-            Bitmap dst = new Bitmap(srcRect.Width, srcRect.Height);
+            Bitmap dst = new Bitmap(srcBbox.Width, srcBbox.Height);
             using (Graphics g = Graphics.FromImage(dst))
             {
-                Rectangle dstRect = new Rectangle(0, 0, srcRect.Width, srcRect.Height);
-                g.DrawImage(src, dstRect, srcRect, GraphicsUnit.Pixel);
+                Rectangle dstBbox = new Rectangle(0, 0, srcBbox.Width, srcBbox.Height);
+                g.DrawImage(src, dstBbox, srcBbox, GraphicsUnit.Pixel);
             }
             return dst;
         }
@@ -544,7 +544,7 @@ namespace CropMaster
                     int width = RandomInteger(mRandGen, min, max);
                     int x = RandomInteger(mRandGen, 0, baseImage.Size.Width - width);
                     int y = RandomInteger(mRandGen, 0, baseImage.Size.Height - width);
-                    mBaseImages[idx].Rectangles.Add(new Rectangle(x, y, width, width));
+                    mBaseImages[idx].Bboxs.Add(new Rectangle(x, y, width, width));
                 }
             }
         }
@@ -552,9 +552,9 @@ namespace CropMaster
         public void RandomCropOne(int n, int min, int max)
         {
             RandomCrop(mCurrentImageIndex, n, min, max);
-            UpdateRectangles();
-            UpdateRectListView();
-            UpdateRectEditorForm();
+            UpdateBboxs();
+            UpdateBboxListView();
+            UpdateBboxEditorForm();
         }
 
         public async void RandomCropAll(int n, int min, int max)
@@ -594,9 +594,9 @@ namespace CropMaster
             finally
             {
                 SetControlMode(true);
-                UpdateRectangles();
-                UpdateRectListView();
-                UpdateRectEditorForm();
+                UpdateBboxs();
+                UpdateBboxListView();
+                UpdateBboxEditorForm();
             }
         }
 
@@ -641,15 +641,15 @@ namespace CropMaster
             ImageContainer baseImage = new ImageContainer();
             baseImage.Path = path;
             baseImage.FileName = Path.GetFileName(path);
-            baseImage.Rectangles = new List<Rectangle>();
+            baseImage.Bboxs = new List<Rectangle>();
             mBaseImages.Add(baseImage);
 
             mCurrentImageIndex = 0;
             trackBar1.Maximum = mBaseImages.Count;
             trackBar1.Value = 1;
             UpdatePictureBox(mBaseImages[0].Path);
-            UpdateRectListView(false);
-            UpdateRectEditorForm();
+            UpdateBboxListView(false);
+            UpdateBboxEditorForm();
             SetControlMode(true);
         }
 
@@ -683,7 +683,7 @@ namespace CropMaster
                             ImageContainer baseImage = new ImageContainer();
                             baseImage.Path = file;
                             baseImage.FileName = file.Remove(0, removeIndex);
-                            baseImage.Rectangles = new List<Rectangle>();
+                            baseImage.Bboxs = new List<Rectangle>();
                             mBaseImages.Add(baseImage);
 
                             if (progressForm.isCancelled)
@@ -697,8 +697,8 @@ namespace CropMaster
                 trackBar1.Maximum = mBaseImages.Count;
                 trackBar1.Value = 1;
                 UpdatePictureBox(mBaseImages[0].Path);
-                UpdateRectListView(false);
-                UpdateRectEditorForm();
+                UpdateBboxListView(false);
+                UpdateBboxEditorForm();
             }
             catch (OperationCanceledException)
             {
@@ -738,7 +738,7 @@ namespace CropMaster
                 {
                     baseImage.Path = files[i];
                     baseImage.FileName = files[i].Remove(0, removeIndex);
-                    baseImage.Rectangles = new List<Rectangle>();
+                    baseImage.Bboxs = new List<Rectangle>();
                 }
                 else
                     baseImage = xmlImages[files[i]];
@@ -761,18 +761,18 @@ namespace CropMaster
             sw.WriteLine("  </Headers>");
             foreach (ImageContainer baseImage in mBaseImages)
             {
-                if (baseImage.Rectangles.Count > 0)
+                if (baseImage.Bboxs.Count > 0)
                 {
                     sw.WriteLine("  <ImageContainer>");
                     sw.WriteLine(String.Format("    <FileName>{0}</FileName>", SecurityElement.Escape(baseImage.FileName)));
-                    foreach (var c in baseImage.Rectangles)
+                    foreach (var c in baseImage.Bboxs)
                     {
-                        sw.WriteLine("    <Rectangle>");
+                        sw.WriteLine("    <Bbox>");
                         sw.WriteLine(String.Format("      <X>{0}</X>", c.X));
                         sw.WriteLine(String.Format("      <Y>{0}</Y>", c.Y));
                         sw.WriteLine(String.Format("      <Width>{0}</Width>", c.Width));
                         sw.WriteLine(String.Format("      <Height>{0}</Height>", c.Height));
-                        sw.WriteLine("    </Rectangle>");
+                        sw.WriteLine("    </Bbox>");
                     }
                     sw.WriteLine("  </ImageContainer>");
                 }
@@ -791,11 +791,11 @@ namespace CropMaster
             sw.WriteLine("  <images>");
             foreach (ImageContainer baseImage in mBaseImages)
             {
-                if (baseImage.Rectangles.Count > 0)
+                if (baseImage.Bboxs.Count > 0)
                 {
                     string imgPath = Path.Combine(mWorkingDirectory, baseImage.FileName);
                     sw.WriteLine(String.Format("    <image file=\'{0}\'>", SecurityElement.Escape(imgPath)));
-                    foreach (var c in baseImage.Rectangles)
+                    foreach (var c in baseImage.Bboxs)
                     {
                         sw.WriteLine(String.Format("      <box top=\'{0}\' left=\'{1}\' width=\'{2}\' height=\'{3}\'/>",
                             c.Y, c.X, c.Width, c.Height));
@@ -834,20 +834,20 @@ namespace CropMaster
                         foreach (XmlNode xmlNode1 in xmlNodeList1)
                         {
                             string fileName = xmlNode1.SelectSingleNode("FileName").InnerText.Trim();
-                            XmlNodeList xmlNodeList2 = xmlNode1.SelectNodes("Rectangle");
-                            var tmpRects = new List<Rectangle>();
+                            XmlNodeList xmlNodeList2 = xmlNode1.SelectNodes("Bbox");
+                            var tmpBboxs = new List<Rectangle>();
                             foreach (XmlNode xmlNode2 in xmlNodeList2)
                             {
                                 int x = int.Parse(xmlNode2.SelectSingleNode("X").InnerText.Trim());
                                 int y = int.Parse(xmlNode2.SelectSingleNode("Y").InnerText.Trim());
                                 int width = int.Parse(xmlNode2.SelectSingleNode("Width").InnerText.Trim());
                                 int height = int.Parse(xmlNode2.SelectSingleNode("Height").InnerText.Trim());
-                                tmpRects.Add(new Rectangle(x, y, width, height));
+                                tmpBboxs.Add(new Rectangle(x, y, width, height));
                             }
                             ImageContainer baseImage = new ImageContainer();
                             baseImage.Path = Path.Combine(mWorkingDirectory, fileName);
                             baseImage.FileName = fileName;
-                            baseImage.Rectangles = tmpRects;
+                            baseImage.Bboxs = tmpBboxs;
                             xmlImages.Add(baseImage.Path, baseImage);
 
                             if (progressForm.isCancelled)
@@ -861,9 +861,9 @@ namespace CropMaster
                 trackBar1.Maximum = mBaseImages.Count;
                 trackBar1.Value = mCurrentImageIndex + 1;
                 UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
-                UpdateRectangles();
-                UpdateRectListView();
-                UpdateRectEditorForm();
+                UpdateBboxs();
+                UpdateBboxListView();
+                UpdateBboxEditorForm();
             }
             catch (OperationCanceledException)
             {
@@ -881,81 +881,81 @@ namespace CropMaster
             }
         }
 
-        public void InflateRect(int value, int idx = -1)
+        public void InflateBbox(int value, int idx = -1)
         {
             if (mBaseImages.Count == 0)
                 return;
 
             if (idx < 0)
-                idx = mBaseImages[mCurrentImageIndex].Rectangles.Count - 1;
-            if (idx >= 0 && idx < mBaseImages[mCurrentImageIndex].Rectangles.Count)
+                idx = mBaseImages[mCurrentImageIndex].Bboxs.Count - 1;
+            if (idx >= 0 && idx < mBaseImages[mCurrentImageIndex].Bboxs.Count)
             {
-                Rectangle rect = mBaseImages[mCurrentImageIndex].Rectangles[idx];
-                rect.Inflate(value, value);
-                if (rect.Width > 0 && rect.Height > 0)
+                Rectangle bbox = mBaseImages[mCurrentImageIndex].Bboxs[idx];
+                bbox.Inflate(value, value);
+                if (bbox.Width > 0 && bbox.Height > 0)
                 {
                     if (EnabledAdjust.Checked)
                     {
-                        if (rect.X < 0)
-                            rect.X = 0;
-                        else if (rect.X + rect.Width > pictureBox1.Image.Size.Width)
-                            rect.X = pictureBox1.Image.Size.Width - rect.Width;
-                        if (rect.Y < 0)
-                            rect.Y = 0;
-                        else if (rect.Y + rect.Height > pictureBox1.Image.Size.Height)
-                            rect.Y = pictureBox1.Image.Size.Height - rect.Height;
+                        if (bbox.X < 0)
+                            bbox.X = 0;
+                        else if (bbox.X + bbox.Width > pictureBox1.Image.Size.Width)
+                            bbox.X = pictureBox1.Image.Size.Width - bbox.Width;
+                        if (bbox.Y < 0)
+                            bbox.Y = 0;
+                        else if (bbox.Y + bbox.Height > pictureBox1.Image.Size.Height)
+                            bbox.Y = pictureBox1.Image.Size.Height - bbox.Height;
                     }
-                    mBaseImages[mCurrentImageIndex].Rectangles[idx] = rect;
-                    UpdateRectListView();
-                    UpdateRectEditorForm(idx);
-                    UpdateRectangles();
+                    mBaseImages[mCurrentImageIndex].Bboxs[idx] = bbox;
+                    UpdateBboxListView();
+                    UpdateBboxEditorForm(idx);
+                    UpdateBboxs();
                 }
             }
         }
 
-        public void SetMemberRectangle(string member, int value, int idx = -1)
+        public void SetBboxMember(string member, int value, int idx = -1)
         {
             if (mBaseImages.Count == 0)
                 return;
 
             if (idx < 0)
-                idx = mBaseImages[mCurrentImageIndex].Rectangles.Count - 1;
-            if (idx >= 0 && idx < mBaseImages[mCurrentImageIndex].Rectangles.Count)
+                idx = mBaseImages[mCurrentImageIndex].Bboxs.Count - 1;
+            if (idx >= 0 && idx < mBaseImages[mCurrentImageIndex].Bboxs.Count)
             {
-                Rectangle rect = mBaseImages[mCurrentImageIndex].Rectangles[idx];
+                Rectangle bbox = mBaseImages[mCurrentImageIndex].Bboxs[idx];
 
                 // なぜか動かない
-                // PropertyInfo pi = rect.GetType().GetProperty(member);
+                // PropertyInfo pi = bbox.GetType().GetProperty(member);
                 // if (pi != null)
-                //     pi.SetValue(rect, value, null);
+                //     pi.SetValue(bbox, value, null);
 
                 switch (member)
                 {
                     case "X":
-                        rect.X = value;
+                        bbox.X = value;
                         break;
                     case "Y":
-                        rect.Y = value;
+                        bbox.Y = value;
                         break;
                     case "Width":
-                        rect.Width = value;
+                        bbox.Width = value;
                         break;
                     case "Height":
-                        rect.Height = value;
+                        bbox.Height = value;
                         break;
                 }
-                AdjustRectangle(ref rect);
-                mBaseImages[mCurrentImageIndex].Rectangles[idx] = rect;
+                AdjustBbox(ref bbox);
+                mBaseImages[mCurrentImageIndex].Bboxs[idx] = bbox;
 
-                UpdateRectListView();
-                UpdateRectEditorForm(idx);
-                UpdateRectangles();
+                UpdateBboxListView();
+                UpdateBboxEditorForm(idx);
+                UpdateBboxs();
             }
         }
 
         private void ExportFillImage(int imageIndex, string exportDirectory, SerialNameGenerator sng)
         {
-            if (mBaseImages[imageIndex].Rectangles.Count == 0)
+            if (mBaseImages[imageIndex].Bboxs.Count == 0)
                 return;
 
             using (var baseImage = new Bitmap(mBaseImages[imageIndex].Path))
@@ -963,45 +963,45 @@ namespace CropMaster
             using (var colorBrush = new SolidBrush(mColor))
             {
                 string savePath = exportDirectory + "\\" + sng.Create(exportDirectory) + ".png";
-                for (int j = 0; j < mBaseImages[imageIndex].Rectangles.Count; j++)
-                    g.FillRectangle(colorBrush, mBaseImages[imageIndex].Rectangles[j]);
+                for (int j = 0; j < mBaseImages[imageIndex].Bboxs.Count; j++)
+                    g.FillRectangle(colorBrush, mBaseImages[imageIndex].Bboxs[j]);
                 baseImage.Save(savePath, System.Drawing.Imaging.ImageFormat.Png);
             }
         }
 
         private void ExportCropImage(int imageIndex, string exportDirectory, SerialNameGenerator sng)
         {
-            if (mBaseImages[imageIndex].Rectangles.Count == 0)
+            if (mBaseImages[imageIndex].Bboxs.Count == 0)
                 return;
 
             int count = 0;
             using (var baseImage = new Bitmap(mBaseImages[imageIndex].Path))
             {
-                for (int j = 0; j < mBaseImages[imageIndex].Rectangles.Count; j++)
+                for (int j = 0; j < mBaseImages[imageIndex].Bboxs.Count; j++)
                 {
-                    Rectangle rect = mBaseImages[imageIndex].Rectangles[j];
-                    using (Bitmap rectImage = CropImage(baseImage, rect))
+                    Rectangle bbox = mBaseImages[imageIndex].Bboxs[j];
+                    using (Bitmap bboxImage = CropImage(baseImage, bbox))
                     {
                         string newFilePath = exportDirectory + "\\" + sng.Create(exportDirectory) + ".png";
-                        rectImage.Save(newFilePath, System.Drawing.Imaging.ImageFormat.Png);
+                        bboxImage.Save(newFilePath, System.Drawing.Imaging.ImageFormat.Png);
                     }
                     count++;
                 }
             }
         }
 
-        private void ShowRectEditorForm()
+        private void ShowBboxEditorForm()
         {
-            mRectEditorForm = new RectEditorForm();
-            mRectEditorForm.Owner = this;
-            mRectEditorForm.FormClosed += new FormClosedEventHandler(RectEditorForm_FormClosed);
-            mRectEditorForm.Show();
-            mRectEditorForm.Location = new Point(this.Location.X + this.Width, this.Location.Y);
+            mBboxEditorForm = new BboxEditorForm();
+            mBboxEditorForm.Owner = this;
+            mBboxEditorForm.FormClosed += new FormClosedEventHandler(BboxEditorForm_FormClosed);
+            mBboxEditorForm.Show();
+            mBboxEditorForm.Location = new Point(this.Location.X + this.Width, this.Location.Y);
         }
 
         private void SetControlMode(bool flag)
         {
-            MappingRectangle.Enabled = flag;
+            MappingBbox.Enabled = flag;
             OpenFolder_ToolStripMenuItem.Enabled = flag;
             OpenFolderRecursive_ToolStripMenuItem.Enabled = flag;
             ExportCrop_ToolStripMenuItem.Enabled = flag;
@@ -1017,7 +1017,7 @@ namespace CropMaster
 
         private void InitializeControlMode(bool flag)
         {
-            MappingRectangle.Enabled = flag;
+            MappingBbox.Enabled = flag;
             ExportCrop_ToolStripMenuItem.Enabled = flag;
             ExportFill_ToolStripMenuItem.Enabled = flag;
             ExportImglab_ToolStripMenuItem.Enabled = flag;
@@ -1028,7 +1028,7 @@ namespace CropMaster
             toolStripButton5.Enabled = flag;
         }
 
-        public void SetFixedRectangleSize(int width, int height)
+        public void SetFixedBboxSize(int width, int height)
         {
             mFixedWidth = width;
             mFixedHeight = height;
@@ -1042,9 +1042,9 @@ namespace CropMaster
             mCurrentImageIndex++;
             trackBar1.Value++;
             UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
-            UpdateRectangles();
-            UpdateRectListView();
-            UpdateRectEditorForm(0);
+            UpdateBboxs();
+            UpdateBboxListView();
+            UpdateBboxEditorForm(0);
         }
 
         private void PrevImage()
@@ -1055,9 +1055,9 @@ namespace CropMaster
             mCurrentImageIndex--;
             trackBar1.Value--;
             UpdatePictureBox(mBaseImages[mCurrentImageIndex].Path);
-            UpdateRectangles();
-            UpdateRectListView();
-            UpdateRectEditorForm(0);
+            UpdateBboxs();
+            UpdateBboxListView();
+            UpdateBboxEditorForm(0);
         }
 
         private void UpdateFillBoxState(bool enabled)

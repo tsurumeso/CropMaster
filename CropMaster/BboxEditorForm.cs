@@ -4,11 +4,11 @@ using System.Windows.Forms;
 
 namespace CropMaster
 {
-    public partial class RectEditorForm : Form
+    public partial class BboxEditorForm : Form
     {
-        int currentRectIndex = -1;
+        int currentBboxIndex = -1;
 
-        public RectEditorForm()
+        public BboxEditorForm()
         {
             InitializeComponent();
         }
@@ -55,17 +55,17 @@ namespace CropMaster
         //    return base.ProcessDialogKey(keyData);
         //}
 
-        private void ChangeNumericValuesManualy(Rectangle rect)
+        private void ChangeNumericValuesManualy(Rectangle bbox)
         {
             numericUpDownEx2.ValueChanged -= numericUpDown2_ValueChanged;
             numericUpDownEx3.ValueChanged -= numericUpDown3_ValueChanged;
             numericUpDownEx4.ValueChanged -= numericUpDown4_ValueChanged;
             numericUpDownEx5.ValueChanged -= numericUpDown5_ValueChanged;
 
-            numericUpDownEx2.Value = rect.X;
-            numericUpDownEx3.Value = rect.Y;
-            numericUpDownEx4.Value = rect.Width;
-            numericUpDownEx5.Value = rect.Height;
+            numericUpDownEx2.Value = bbox.X;
+            numericUpDownEx3.Value = bbox.Y;
+            numericUpDownEx4.Value = bbox.Width;
+            numericUpDownEx5.Value = bbox.Height;
 
             numericUpDownEx2.ValueChanged += numericUpDown2_ValueChanged;
             numericUpDownEx3.ValueChanged += numericUpDown3_ValueChanged;
@@ -73,20 +73,20 @@ namespace CropMaster
             numericUpDownEx5.ValueChanged += numericUpDown5_ValueChanged;
         }
 
-        public void UpdatePictureBox(Image rectImage, Rectangle rect, int idx)
+        public void UpdatePictureBox(Image bboxImage, Rectangle bbox, int idx)
         {
-            currentRectIndex = idx;
-            ChangeNumericValuesManualy(rect);
+            currentBboxIndex = idx;
+            ChangeNumericValuesManualy(bbox);
 
-            if (rectImage == null && pictureBox1.Image != null)
+            if (bboxImage == null && pictureBox1.Image != null)
                 pictureBox1.Image.Dispose();
 
-            pictureBox1.Image = rectImage;
+            pictureBox1.Image = bboxImage;
         }
 
         public void InitializePictureBox()
         {
-            currentRectIndex = -1;
+            currentBboxIndex = -1;
             ChangeNumericValuesManualy(new Rectangle(0, 0, 1, 1));
 
             if (pictureBox1.Image != null)
@@ -139,42 +139,42 @@ namespace CropMaster
 
         private void button5_Click(object sender, EventArgs e)
         {
-            ((MainForm)this.Owner).UpdateRectEditorForm(currentRectIndex, true);
+            ((MainForm)this.Owner).UpdateBboxEditorForm(currentBboxIndex, true);
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            ((MainForm)this.Owner).UpdateRectEditorForm(currentRectIndex, false);
+            ((MainForm)this.Owner).UpdateBboxEditorForm(currentBboxIndex, false);
         }
 
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
         {
-            ((MainForm)this.Owner).SetMemberRectangle("X", (int)numericUpDownEx2.Value, currentRectIndex);
+            ((MainForm)this.Owner).SetBboxMember("X", (int)numericUpDownEx2.Value, currentBboxIndex);
         }
 
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
         {
-            ((MainForm)this.Owner).SetMemberRectangle("Y", (int)numericUpDownEx3.Value, currentRectIndex);
+            ((MainForm)this.Owner).SetBboxMember("Y", (int)numericUpDownEx3.Value, currentBboxIndex);
         }
 
         private void numericUpDown4_ValueChanged(object sender, EventArgs e)
         {
-            ((MainForm)this.Owner).SetMemberRectangle("Width", (int)numericUpDownEx4.Value, currentRectIndex);
+            ((MainForm)this.Owner).SetBboxMember("Width", (int)numericUpDownEx4.Value, currentBboxIndex);
         }
 
         private void numericUpDown5_ValueChanged(object sender, EventArgs e)
         {
-            ((MainForm)this.Owner).SetMemberRectangle("Height", (int)numericUpDownEx5.Value, currentRectIndex);
+            ((MainForm)this.Owner).SetBboxMember("Height", (int)numericUpDownEx5.Value, currentBboxIndex);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ((MainForm)this.Owner).InflateRect((int)numericUpDownEx1.Value, currentRectIndex);
+            ((MainForm)this.Owner).InflateBbox((int)numericUpDownEx1.Value, currentBboxIndex);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            ((MainForm)this.Owner).InflateRect(-(int)numericUpDownEx1.Value, currentRectIndex);
+            ((MainForm)this.Owner).InflateBbox(-(int)numericUpDownEx1.Value, currentBboxIndex);
         }
     }
 }

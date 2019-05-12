@@ -2,6 +2,6 @@
 {
     enum AspectRatioType
     {
-        Squared, Fixed, Free
+        Square, Fixed, Free
     }
 }

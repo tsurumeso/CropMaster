@@ -1,6 +1,6 @@
 ﻿namespace CropMaster
 {
-    partial class RectEditorForm
+    partial class BboxEditorForm
     {
         /// <summary>
         /// Required designer variable.
