@@ -1,8 +1,8 @@
-[![Release](https://img.shields.io/github/release/tsurumeso/CropMaster.svg)](https://github.com/tsurumeso/CropMaster/releases/latest)
-[![License](https://img.shields.io/github/license/tsurumeso/CropMaster.svg)](https://github.com/tsurumeso/CropMaster/blob/master/LICENSE.txt)
-[![Build status](https://ci.appveyor.com/api/projects/status/ee8v8oawu2nvbiec/branch/master?svg=true)](https://ci.appveyor.com/project/tsurumeso/cropmaster/branch/master)
-
 # CropMaster
+
+[![Release](https://img.shields.io/github/release/tsurumeso/CropMaster.svg)](https://github.com/tsurumeso/CropMaster/releases/latest)
+[![Release](https://img.shields.io/github/downloads/tsurumeso/CropMaster/total.svg)](https://github.com/tsurumeso/CropMaster/releases)
+[![Build status](https://ci.appveyor.com/api/projects/status/ee8v8oawu2nvbiec/branch/master?svg=true)](https://ci.appveyor.com/project/tsurumeso/cropmaster/branch/master)
 
 CropMaster は，複数画像中の注目領域を効率的に選択しクロップするために開発された GUI アプリです．
 
